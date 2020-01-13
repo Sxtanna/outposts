@@ -1,0 +1,31 @@
+posts:
+  world_snow:
+    name: "Snow Outpost"
+    zone: "world;outpost_snow"
+    data:
+      time: 50
+      done:
+        - "[server-command] say Fire Outpost has been captured by %player_name%"
+  world_fire:
+    0:
+      name: "Fire Outpost 0"
+      zone: "world;outpost_fire-0"
+      data:
+        time: 10
+        done:
+          - "[server-command] say Fire Outpost has been captured by %player_name%"
+          - "[server-command] give %player_name% GOLDEN_APPLE 64"
+    1:
+      name: "Fire Outpost 1"
+      zone: "world;outpost_fire-1"
+      data:
+        time: 20
+        done:
+          - ""
+    2:
+      name: "Fire Outpost 2"
+      zone: "world;outpost_fire-2"
+      data:
+        time: 30
+        done:
+          - ""

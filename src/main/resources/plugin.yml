@@ -1,0 +1,13 @@
+name: Outposts
+main: com.sxtanna.mc.posts.Outposts
+
+version: '1.0-SNAPSHOT'
+website: "https://gh.sxtanna.com"
+authors: ["Sxtanna"]
+
+depend:
+  - 'WorldGuard'
+  - 'ShopGUIPlus'
+  - 'Factions'
+softdepend:
+  - 'PlaceholderAPI'
