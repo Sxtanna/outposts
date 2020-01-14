@@ -35,34 +35,34 @@ public final class OutpostDataParse implements Parse<Outpost>
 		//<editor-fold desc="validating">
 		if (name == null || name.isBlank())
 		{
-			fail(plugin, conf, "pull outpost", "missing name");
+			fail(plugin, conf, "outpost", "missing name");
 			return Optional.empty();
 		}
 
 		if (zone == null || zone.isBlank())
 		{
-			fail(plugin, conf, "pull outpost", "missing zone");
+			fail(plugin, conf, "outpost", "missing zone");
 			return Optional.empty();
 		}
 
 		final var parts = zone.split(";");
 		if (parts.length != 2)
 		{
-			fail(plugin, conf, "pull outpost", "malformed zone data `{world};{region}`");
+			fail(plugin, conf, "outpost", "malformed zone data `{world};{region}`");
 			return Optional.empty();
 		}
 
 		final var world = plugin.getServer().getWorld(parts[0]);
 		if (world == null)
 		{
-			fail(plugin, conf, "pull outpost", "malformed zone data unknown world `%s`", parts[0]);
+			fail(plugin, conf, "outpost", "malformed zone data unknown world `%s`", parts[0]);
 			return Optional.empty();
 		}
 
-		final var cube = plugin.getWorldGuardHook().getCuboidOfRegion(world, parts[1]);
+		final var cube = plugin.getHookWorldGuard().getCuboidOfRegion(world, parts[1]);
 		if (cube.isEmpty())
 		{
-			fail(plugin, conf, "pull outpost", "malformed zone data unknown region `%s`", parts[1]);
+			fail(plugin, conf, "outpost", "malformed zone data unknown region `%s`", parts[1]);
 			return Optional.empty();
 		}
 		//</editor-fold>
@@ -80,16 +80,6 @@ public final class OutpostDataParse implements Parse<Outpost>
 
 
 		return Optional.of(post);
-	}
-
-	@Override
-	public void push(@NotNull final Outposts plugin, final @NotNull Outpost data, final @NotNull ConfigurationSection conf)
-	{
-		conf.set("name", data.getName());
-		conf.set("zone", data.getCaptureZoneName());
-
-		conf.set("data.time", data.getCaptureTime());
-		conf.set("data.done", data.getCaptureDone());
 	}
 
 }

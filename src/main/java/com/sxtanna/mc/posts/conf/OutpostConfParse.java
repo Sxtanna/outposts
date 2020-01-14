@@ -64,6 +64,9 @@ public final class OutpostConfParse implements Parse<Collection<Outpost>>
 				}
 
 				here.setCapturePrev(iter.previous());
+
+				// undo previous iteration
+				iter.next();
 			}
 
 			// add all the newly loaded outposts to the data list
@@ -72,12 +75,6 @@ public final class OutpostConfParse implements Parse<Collection<Outpost>>
 
 
 		return Optional.of(data);
-	}
-
-	@Override
-	public void push(@NotNull final Outposts plugin, final @NotNull Collection<Outpost> data, final @NotNull ConfigurationSection conf)
-	{
-
 	}
 
 }
