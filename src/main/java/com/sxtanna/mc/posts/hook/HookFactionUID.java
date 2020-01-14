@@ -9,16 +9,17 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
+import java.util.Optional;
 import java.util.logging.Level;
 
-public final class FactionUIDHook implements Hooks
+public final class HookFactionUID implements Hooks
 {
 
 	private final Plugin                  plugin;
 	private       WeakReference<Factions> hooked;
 
 
-	public FactionUIDHook(final Plugin plugin)
+	public HookFactionUID(final Plugin plugin)
 	{
 		this.plugin = plugin;
 	}
@@ -71,6 +72,53 @@ public final class FactionUIDHook implements Hooks
 		Econ.deposit(fPlayer.getFaction().getAccountId(), amount);
 	}
 
+	public Optional<String> getFactionName(@NotNull final Player player)
+	{
+		final var hooked = this.hooked.get();
+		if (hooked == null)
+		{
+			return Optional.empty();
+		}
+
+		final var faction = FPlayers.getInstance().getByPlayer(player).getFaction();
+
+		if (!faction.isNormal())
+		{
+			return Optional.empty();
+		}
+
+		return Optional.of(faction.getTag());
+	}
+
+	public Optional<String> getFactionName(@NotNull final String factionUUID)
+	{
+		final var hooked = this.hooked.get();
+		if (hooked == null)
+		{
+			return Optional.empty();
+		}
+
+		return Optional.ofNullable(Factions.getInstance().getFactionById(factionUUID).getTag());
+	}
+
+	public Optional<String> getFactionUUID(@NotNull final Player player)
+	{
+		final var hooked = this.hooked.get();
+		if (hooked == null)
+		{
+			return Optional.empty();
+		}
+
+		final var faction = FPlayers.getInstance().getByPlayer(player).getFaction();
+
+		if (!faction.isNormal())
+		{
+			return Optional.empty();
+		}
+
+		return Optional.of(faction.getId());
+	}
+
 	public boolean inTheSameFaction(@NotNull final Player thisPlayer, @NotNull final Player thatPlayer)
 	{
 		final var hooked = this.hooked.get();
@@ -79,15 +127,16 @@ public final class FactionUIDHook implements Hooks
 			return false;
 		}
 
-		final var thisFPlayer = FPlayers.getInstance().getByPlayer(thisPlayer);
-		final var thatFPlayer = FPlayers.getInstance().getByPlayer(thatPlayer);
+		final var thisFaction = getFactionUUID(thisPlayer);
+		final var thatFaction = getFactionUUID(thatPlayer);
 
-		if (!thisFPlayer.getFaction().isNormal() || !thatFPlayer.getFaction().isNormal())
+		if (thisFaction.isEmpty() || thatFaction.isEmpty())
 		{
 			return false;
 		}
 
-		return thisFPlayer.getFaction().getId().equals(thatFPlayer.getFaction().getId());
+
+		return thisFaction.equals(thatFaction);
 	}
 
 }

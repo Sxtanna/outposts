@@ -11,3 +11,10 @@ depend:
   - 'Factions'
 softdepend:
   - 'PlaceholderAPI'
+
+commands:
+  outposts:
+    aliases: ["posts"]
+    description: "main outposts management command"
+    permission: "outposts.command"
+    usage: "/outposts [list, info]"

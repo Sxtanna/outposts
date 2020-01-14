@@ -4,6 +4,7 @@ import com.sxtanna.mc.posts.data.base.OutpostEvent;
 import com.sxtanna.mc.posts.post.base.Contest;
 import com.sxtanna.mc.posts.post.base.Outpost;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 public final class OutpostResetEvent extends OutpostEvent
 {
@@ -21,7 +22,7 @@ public final class OutpostResetEvent extends OutpostEvent
 	}
 
 
-	public OutpostResetEvent(final Outpost outpost, final Contest contest)
+	public OutpostResetEvent(@NotNull final Outpost outpost, @NotNull final Contest contest)
 	{
 		super(outpost, contest);
 	}

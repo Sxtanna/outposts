@@ -11,14 +11,14 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.ref.WeakReference;
 import java.util.logging.Level;
 
-public final class ShopGuiApiHook implements Hooks
+public final class HookShopGuiApi implements Hooks
 {
 
 	private final Plugin                       plugin;
 	private       WeakReference<ShopGuiPlugin> hooked;
 
 
-	public ShopGuiApiHook(final Plugin plugin)
+	public HookShopGuiApi(final Plugin plugin)
 	{
 		this.plugin = plugin;
 	}

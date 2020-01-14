@@ -26,7 +26,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-public final class WorldGuardHook implements Hooks
+public final class HookWorldGuard implements Hooks
 {
 
 	private final Plugin                          plugin;
@@ -34,7 +34,7 @@ public final class WorldGuardHook implements Hooks
 	private final List<Moved>                     cached = new ArrayList<>();
 
 
-	public WorldGuardHook(final Plugin plugin)
+	public HookWorldGuard(final Plugin plugin)
 	{
 		this.plugin = plugin;
 	}

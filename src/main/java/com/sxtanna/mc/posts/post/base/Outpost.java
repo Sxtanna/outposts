@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public final class Outpost implements State
 {
@@ -18,7 +19,6 @@ public final class Outpost implements State
 
 
 	private Outpost      capturePrev;
-	private Mode         captureMode;
 	private int          captureTime;
 	private List<String> captureDone;
 
@@ -62,18 +62,6 @@ public final class Outpost implements State
 	public void setCapturePrev(@Nullable final Outpost capturePrev)
 	{
 		this.capturePrev = capturePrev;
-	}
-
-
-	@NotNull
-	public Mode getCaptureMode()
-	{
-		return captureMode != null ? captureMode : Mode.NEUTRAL;
-	}
-
-	public void setCaptureMode(@NotNull final Mode captureMode)
-	{
-		this.captureMode = captureMode;
 	}
 
 
@@ -124,13 +112,32 @@ public final class Outpost implements State
 	}
 
 
-	public enum Mode
+	@Override
+	public boolean equals(final Object o)
 	{
+		if (this == o)
+		{
+			return true;
+		}
+		if (!(o instanceof Outpost))
+		{
+			return false;
+		}
+		final Outpost outpost = (Outpost) o;
+		return getName().equals(outpost.getName());
+	}
 
-		NEUTRAL,
-		CAPTURED,
-		CONTESTED,
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(getName());
+	}
 
+
+	@Override
+	public String toString()
+	{
+		return String.format("Outpost[name: '%s', prev: %s]", name, capturePrev);
 	}
 
 }

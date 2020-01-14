@@ -21,6 +21,7 @@ public final class Cuboid
 		this.max = max;
 	}
 
+
 	@NotNull
 	public Vector getMin()
 	{

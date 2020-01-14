@@ -20,6 +20,7 @@ public abstract class OutpostEvent extends Event
 		this.contest = contest;
 	}
 
+
 	@NotNull
 	public Outpost getOutpost()
 	{

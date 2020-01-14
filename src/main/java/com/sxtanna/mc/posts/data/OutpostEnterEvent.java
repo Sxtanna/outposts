@@ -27,9 +27,10 @@ public final class OutpostEnterEvent extends OutpostEvent
 	private final Player player;
 
 
-	public OutpostEnterEvent(final Outpost outpost, final Contest contest, @NotNull final Player player)
+	public OutpostEnterEvent(@NotNull final Outpost outpost, @NotNull final Contest contest, @NotNull final Player player)
 	{
 		super(outpost, contest);
+
 		this.player = player;
 	}
 

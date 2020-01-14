@@ -3,10 +3,11 @@ package com.sxtanna.mc.posts.data;
 import com.sxtanna.mc.posts.data.base.OutpostEvent;
 import com.sxtanna.mc.posts.post.base.Contest;
 import com.sxtanna.mc.posts.post.base.Outpost;
+import com.sxtanna.mc.posts.post.data.CaptureState;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-public final class OutpostClaimEvent extends OutpostEvent
+public final class ContestStateEvent extends OutpostEvent
 {
 
 	private static final HandlerList HANDLERS = new HandlerList();
@@ -23,30 +24,30 @@ public final class OutpostClaimEvent extends OutpostEvent
 
 
 	@NotNull
-	private final String factionName;
+	private final CaptureState oldState;
 	@NotNull
-	private final String factionUUID;
+	private final CaptureState newState;
 
 
-	public OutpostClaimEvent(@NotNull final Outpost outpost, @NotNull final Contest contest, @NotNull final String factionName, @NotNull final String factionUUID)
+	public ContestStateEvent(@NotNull final Outpost outpost, @NotNull final Contest contest, @NotNull final CaptureState oldState, @NotNull final CaptureState newState)
 	{
 		super(outpost, contest);
 
-		this.factionName = factionName;
-		this.factionUUID = factionUUID;
+		this.oldState = oldState;
+		this.newState = newState;
 	}
 
 
 	@NotNull
-	public String getFactionName()
+	public CaptureState getOldState()
 	{
-		return factionName;
+		return oldState;
 	}
 
 	@NotNull
-	public String getFactionUUID()
+	public CaptureState getNewState()
 	{
-		return factionUUID;
+		return newState;
 	}
 
 }
