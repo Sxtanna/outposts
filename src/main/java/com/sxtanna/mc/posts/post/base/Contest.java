@@ -35,6 +35,7 @@ public final class Contest
 		this.outpost = outpost;
 	}
 
+
 	@NotNull
 	public Outpost getOutpost()
 	{
@@ -55,12 +56,6 @@ public final class Contest
 
 
 	@NotNull
-	public Optional<Player> getAnyPlayerInside()
-	{
-		return getInside().values().stream().findAny().stream().flatMap(Collection::stream).findAny();
-	}
-
-	@NotNull
 	public Collection<Player> getPlayersInside()
 	{
 		return getInside().values().stream().flatMap(Collection::stream).collect(Collectors.toList());
@@ -75,6 +70,10 @@ public final class Contest
 	public void leave(@NotNull final String group, @NotNull final Player player)
 	{
 		final var players = inside.get(group);
+		if (players == null)
+		{
+			return;
+		}
 
 		players.remove(player);
 
@@ -131,6 +130,16 @@ public final class Contest
 	public Optional<BukkitTask> swapUpdatingTask(@Nullable final BukkitTask task)
 	{
 		return Optional.ofNullable(update.getAndSet(task));
+	}
+
+
+	public void reset()
+	{
+		capturedUUID = null;
+
+		levels.clear();
+		inside.clear();
+		Optional.ofNullable(update.getAndSet(null)).ifPresent(BukkitTask::cancel);
 	}
 
 }
