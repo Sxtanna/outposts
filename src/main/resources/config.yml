@@ -5,7 +5,7 @@ posts:
     data:
       time: 50
       done:
-        - "[server-command] say Fire Outpost has been captured by %player_name%"
+        - "[command-server] say Fire Outpost has been captured by %player_name%"
   world_fire:
     0:
       name: "Fire Outpost 0"
@@ -13,19 +13,20 @@ posts:
       data:
         time: 10
         done:
-          - "[server-command] say Fire Outpost has been captured by %player_name%"
-          - "[server-command] give %player_name% GOLDEN_APPLE 64"
+          - "[message] You have captured %outpost_name%"
+          - "[command-server] say Fire Outpost has been captured by %player_name%"
+          - "[command-server] give %player_name% GOLDEN_APPLE 64"
     1:
       name: "Fire Outpost 1"
       zone: "world;outpost_fire-1"
       data:
         time: 20
         done:
-          - ""
+          - "[message] You have captured %outpost_name%"
     2:
       name: "Fire Outpost 2"
       zone: "world;outpost_fire-2"
       data:
         time: 30
         done:
-          - ""
+          - "[message] You have captured %outpost_name%"

@@ -1,11 +1,14 @@
 package com.sxtanna.mc.posts.conf;
 
+import com.google.common.collect.Lists;
 import com.sxtanna.mc.posts.Outposts;
 import com.sxtanna.mc.posts.base.Parse;
 import com.sxtanna.mc.posts.post.base.Outpost;
+import com.sxtanna.mc.posts.post.data.OutpostActor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 public final class OutpostDataParse implements Parse<Outpost>
@@ -24,8 +27,8 @@ public final class OutpostDataParse implements Parse<Outpost>
 	{
 
 		//<editor-fold desc="retrieving">
-		final var name = conf.getString("name");
-		final var zone = conf.getString("zone");
+		final var outpostName = conf.getString("name");
+		final var outpostZone = conf.getString("zone");
 
 		final var captureTime = conf.getInt("data.time", 10);
 		final var captureDone = conf.getStringList("data.done");
@@ -33,19 +36,25 @@ public final class OutpostDataParse implements Parse<Outpost>
 
 
 		//<editor-fold desc="validating">
-		if (name == null || name.isBlank())
+		if (captureTime <= 0)
+		{
+			fail(plugin, conf, "outpost", "capture time must be greater than 0");
+			return Optional.empty();
+		}
+
+		if (outpostName == null || outpostName.isBlank())
 		{
 			fail(plugin, conf, "outpost", "missing name");
 			return Optional.empty();
 		}
 
-		if (zone == null || zone.isBlank())
+		if (outpostZone == null || outpostZone.isBlank())
 		{
 			fail(plugin, conf, "outpost", "missing zone");
 			return Optional.empty();
 		}
 
-		final var parts = zone.split(";");
+		final var parts = outpostZone.split(";");
 		if (parts.length != 2)
 		{
 			fail(plugin, conf, "outpost", "malformed zone data `{world};{region}`");
@@ -69,13 +78,53 @@ public final class OutpostDataParse implements Parse<Outpost>
 
 
 		//<editor-fold desc="generating">
-		final var post = new Outpost(name);
+		final var post = new Outpost(outpostName);
 
 		post.setCaptureTime(captureTime);
-		post.setCaptureDone(captureDone);
 
-		post.setCaptureZoneName(zone);
+		post.setCaptureZoneName(outpostZone);
 		post.setCaptureZoneCube(cube.get());
+
+		final var done = Lists.<OutpostActor>newArrayList();
+
+		for (final var text : captureDone)
+		{
+			final var data = text.split(" ");
+			if (data.length <= 1)
+			{
+				continue;
+			}
+
+			final var name = data[0];
+			if (!name.startsWith("[") || !name.endsWith("]"))
+			{
+				continue;
+			}
+
+			final var pass = String.join(" ", Arrays.copyOfRange(data, 1, data.length));
+
+			OutpostActor actor = null;
+
+			switch (name.substring(1, name.length() - 1).toLowerCase())
+			{
+				case "message":
+					actor = new OutpostActor.Message(pass);
+					break;
+				case "command-player":
+					actor = new OutpostActor.Command(pass, false);
+					break;
+				case "command-server":
+					actor = new OutpostActor.Command(pass, true);
+					break;
+			}
+
+			if (actor != null)
+			{
+				done.add(actor);
+			}
+		}
+
+		post.setCaptureDone(done);
 		//</editor-fold>
 
 

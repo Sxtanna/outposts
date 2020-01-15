@@ -1,5 +1,6 @@
 package com.sxtanna.mc.posts.post.base;
 
+import com.sxtanna.mc.posts.post.data.OutpostActor;
 import com.sxtanna.mc.posts.util.Cuboid;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,10 +19,10 @@ public final class Outpost
 	private final String name;
 
 
-	private Outpost      capturePrev;
-	private Outpost      captureNext;
-	private int          captureTime;
-	private List<String> captureDone;
+	private Outpost            capturePrev;
+	private Outpost            captureNext;
+	private int                captureTime;
+	private List<OutpostActor> captureDone;
 
 
 	private String captureZoneName;
@@ -77,12 +78,12 @@ public final class Outpost
 
 
 	@NotNull
-	public List<String> getCaptureDone()
+	public List<OutpostActor> getCaptureDone()
 	{
 		return captureDone != null ? captureDone : Collections.emptyList();
 	}
 
-	public void setCaptureDone(@NotNull final Collection<String> captureDone)
+	public void setCaptureDone(@NotNull final Collection<OutpostActor> captureDone)
 	{
 		this.captureDone = new ArrayList<>(captureDone);
 	}
