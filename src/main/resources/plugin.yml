@@ -17,4 +17,4 @@ commands:
     aliases: ["posts"]
     description: "main outposts management command"
     permission: "outposts.command"
-    usage: "/outposts [list, info]"
+    usage: "/outposts info, list, reload]"
