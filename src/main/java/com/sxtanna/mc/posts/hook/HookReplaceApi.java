@@ -5,6 +5,7 @@ import com.sxtanna.mc.posts.Outposts;
 import com.sxtanna.mc.posts.base.Hooks;
 import com.sxtanna.mc.posts.papi.OutpostReplaceMVDW;
 import com.sxtanna.mc.posts.papi.OutpostReplacePAPI;
+import com.sxtanna.mc.posts.post.base.Outpost;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,7 +43,7 @@ public final class HookReplaceApi implements Hooks
 	}
 
 
-	public String request(@NotNull final String text, @Nullable final OfflinePlayer player)
+	public String request(@NotNull final String text, @Nullable final OfflinePlayer player, @Nullable final Outpost outpost)
 	{
 		var finalText = text;
 

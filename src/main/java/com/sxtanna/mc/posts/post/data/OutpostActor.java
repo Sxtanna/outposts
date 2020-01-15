@@ -28,7 +28,7 @@ public interface OutpostActor
 		@Override
 		public void act(@NotNull final Outposts plugin, final @NotNull Outpost outpost, final @NotNull Player player)
 		{
-			player.sendMessage(plugin.getHookReplaceApi().request(message, player));
+			player.sendMessage(plugin.getHookReplaceApi().request(message, player, outpost));
 		}
 
 	}
@@ -51,7 +51,7 @@ public interface OutpostActor
 		@Override
 		public void act(@NotNull Outposts plugin, final @NotNull Outpost outpost, final @NotNull Player player)
 		{
-			Bukkit.dispatchCommand(console ? Bukkit.getConsoleSender() : player, plugin.getHookReplaceApi().request(command, player));
+			Bukkit.dispatchCommand(console ? Bukkit.getConsoleSender() : player, plugin.getHookReplaceApi().request(command, player, outpost));
 		}
 
 	}
