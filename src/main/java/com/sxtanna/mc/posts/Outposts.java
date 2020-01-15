@@ -31,12 +31,7 @@ public final class Outposts extends JavaPlugin
 	@Override
 	public void onEnable()
 	{
-		getHookShopGuiApi().load();
-		getHookFactionUID().load();
-		getHookWorldGuard().load();
-
-		getManagerOutpost().load();
-		getManagerContest().load();
+		loadPlugin();
 
 		attemptToRegisterPlaceholders();
 
@@ -48,12 +43,7 @@ public final class Outposts extends JavaPlugin
 	{
 		commandOutpost.kill();
 
-		getHookShopGuiApi().kill();
-		getHookFactionUID().kill();
-		getHookWorldGuard().kill();
-
-		getManagerContest().kill();
-		getManagerOutpost().kill();
+		killPlugin();
 	}
 
 
@@ -83,6 +73,36 @@ public final class Outposts extends JavaPlugin
 		return hookWorldGuard;
 	}
 
+
+	public void reloadPlugin()
+	{
+		killPlugin();
+
+		reloadConfig();
+
+		loadPlugin();
+	}
+
+
+	private void loadPlugin()
+	{
+		getHookShopGuiApi().load();
+		getHookFactionUID().load();
+		getHookWorldGuard().load();
+
+		getManagerOutpost().load();
+		getManagerContest().load();
+	}
+
+	private void killPlugin()
+	{
+		getHookShopGuiApi().kill();
+		getHookFactionUID().kill();
+		getHookWorldGuard().kill();
+
+		getManagerContest().kill();
+		getManagerOutpost().kill();
+	}
 
 	private void attemptToRegisterPlaceholders()
 	{
