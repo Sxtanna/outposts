@@ -52,6 +52,17 @@ public final class HookReplaceApi implements Hooks
 			finalText = replacer.apply(player, finalText);
 		}
 
+
+		if (player != null)
+		{
+			finalText = finalText.replace(":player_name:", player.getName());
+		}
+
+		if (outpost != null)
+		{
+			finalText = finalText.replace(":outpost_name:", outpost.getName());
+		}
+
 		return finalText;
 	}
 
