@@ -3,6 +3,8 @@ package com.sxtanna.mc.posts.util;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public final class Cuboid
 {
 
@@ -50,6 +52,34 @@ public final class Cuboid
 		return vector.isInSphere(getMax().subtract(getMin()), radius);
 	}
 
+
+	@Override
+	public boolean equals(final Object o)
+	{
+		if (this == o)
+		{
+			return true;
+		}
+		if (!(o instanceof Cuboid))
+		{
+			return false;
+		}
+
+		final Cuboid cuboid = (Cuboid) o;
+		return getMin().equals(cuboid.getMin()) && getMax().equals(cuboid.getMax());
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(getMin(), getMax());
+	}
+
+	@Override
+	public String toString()
+	{
+		return String.format("Cuboid[min: %s, max: %s]", min, max);
+	}
 
 	@NotNull
 	public static Cuboid of(@NotNull final Vector min, @NotNull final Vector max)
