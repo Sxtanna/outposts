@@ -348,6 +348,30 @@ public final class ManagerContest implements State, Listener
 		} while ((post = post.getCaptureNext().orElse(null)) != null);
 	}
 
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onOutpostClaim(@NotNull final OutpostClaimEvent event)
+	{
+		final var actors = event.getOutpost().getCaptureDone();
+		if (actors.isEmpty())
+		{
+			return;
+		}
+
+		final var online = plugin.getHookFactionUID().getPlayersInFaction(event.getFactionUUID());
+		if (online.isEmpty())
+		{
+			return; // that would be very strange...
+		}
+
+		for (final var player : online)
+		{
+			for (final var actor : actors)
+			{
+				actor.act(plugin, event.getOutpost(), player);
+			}
+		}
+	}
+
 
 	private void moved(@NotNull Player player, @NotNull World world, @NotNull Collection<String> fromZones, @NotNull Collection<String> intoZones)
 	{
