@@ -54,7 +54,7 @@ dependencies {
     // plugin hooks
     compileOnly(fileTree(dir: 'gradle/depends', include: ['*.jar']))
     
-    compileOnly("com.massivecraft:Factions:+")
+    compileOnly("com.massivecraft:Factions:1.6.9.5-U0.5.7")
     
     compileOnly("com.sk89q.worldguard:worldguard-legacy:6.1.3-SNAPSHOT") {
         exclude group: 'org.bukkit'
