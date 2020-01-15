@@ -102,6 +102,18 @@ public final class Contest
 	}
 
 
+	public double getCapturePercentage()
+	{
+		final var max = getLevels().entrySet().stream().max(Map.Entry.comparingByValue());
+		if (max.isEmpty())
+		{
+			return 0.0;
+		}
+
+		return ((double) max.get().getValue() / (double) outpost.getCaptureTime()) * 100.0;
+	}
+
+
 	@NotNull
 	public CaptureState getCaptureState()
 	{
