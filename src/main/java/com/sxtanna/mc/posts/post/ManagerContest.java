@@ -263,9 +263,6 @@ public final class ManagerContest implements State, Listener
 		switch (event.getNewState())
 		{
 			case NEUTRAL:
-				cont.getLevels().clear();
-				cont.setCapturedUUID(null);
-
 				if (!cont.getInside().isEmpty() && allInsideAreTheSameFaction(cont))
 				{
 					later(() ->
@@ -319,7 +316,6 @@ public final class ManagerContest implements State, Listener
 
 					if (newLevel <= 0)
 					{
-						plugin.getServer().getPluginManager().callEvent(new ContestStateEvent(event.getOutpost(), event.getContest(), event.getContest().getCaptureState(), CaptureState.NEUTRAL));
 						plugin.getServer().getPluginManager().callEvent(new OutpostResetEvent(event.getOutpost(), event.getContest()));
 					}
 				});
@@ -331,6 +327,25 @@ public final class ManagerContest implements State, Listener
 		}
 
 		cont.swapUpdatingTask(update).ifPresent(BukkitTask::cancel);
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onOutpostReset(@NotNull final OutpostResetEvent event)
+	{
+		var post = event.getOutpost();
+
+		do
+		{
+			var cont = getContest(post);
+			if (cont.getCaptureState() == CaptureState.NEUTRAL)
+			{
+				break;
+			}
+
+			cont.reset();
+			plugin.getServer().getPluginManager().callEvent(new ContestStateEvent(post, cont, cont.getCaptureState(), CaptureState.NEUTRAL));
+
+		} while ((post = post.getCaptureNext()) != null);
 	}
 
 
