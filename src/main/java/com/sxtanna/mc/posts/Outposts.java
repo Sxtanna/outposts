@@ -2,9 +2,10 @@ package com.sxtanna.mc.posts;
 
 import com.sxtanna.mc.posts.cmds.CommandOutpost;
 import com.sxtanna.mc.posts.hook.HookFactionUID;
+import com.sxtanna.mc.posts.hook.HookReplaceApi;
 import com.sxtanna.mc.posts.hook.HookShopGuiApi;
 import com.sxtanna.mc.posts.hook.HookWorldGuard;
-import com.sxtanna.mc.posts.papi.Placeholders;
+import com.sxtanna.mc.posts.papi.OutpostReplace;
 import com.sxtanna.mc.posts.post.ManagerContest;
 import com.sxtanna.mc.posts.post.ManagerOutpost;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,11 +13,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class Outposts extends JavaPlugin
 {
 
+	private final OutpostReplace outpostReplace = new OutpostReplace(this);
 	private final CommandOutpost commandOutpost = new CommandOutpost(this);
 
 	private final ManagerOutpost managerOutpost = new ManagerOutpost(this);
 	private final ManagerContest managerContest = new ManagerContest(this);
 
+	private final HookReplaceApi hookReplaceApi = new HookReplaceApi(this);
 	private final HookFactionUID hookFactionUID = new HookFactionUID(this);
 	private final HookShopGuiApi hookShopGuiApi = new HookShopGuiApi(this);
 	private final HookWorldGuard hookWorldGuard = new HookWorldGuard(this);
@@ -32,8 +35,6 @@ public final class Outposts extends JavaPlugin
 	public void onEnable()
 	{
 		loadPlugin();
-
-		attemptToRegisterPlaceholders();
 
 		commandOutpost.load();
 	}
@@ -57,6 +58,22 @@ public final class Outposts extends JavaPlugin
 		return managerContest;
 	}
 
+
+	public CommandOutpost getCommandOutpost()
+	{
+		return commandOutpost;
+	}
+
+	public OutpostReplace getOutpostReplace()
+	{
+		return outpostReplace;
+	}
+
+
+	public HookReplaceApi getHookReplaceApi()
+	{
+		return hookReplaceApi;
+	}
 
 	public HookFactionUID getHookFactionUID()
 	{
@@ -86,6 +103,7 @@ public final class Outposts extends JavaPlugin
 
 	private void loadPlugin()
 	{
+		getHookReplaceApi().load();
 		getHookShopGuiApi().load();
 		getHookFactionUID().load();
 		getHookWorldGuard().load();
@@ -96,24 +114,13 @@ public final class Outposts extends JavaPlugin
 
 	private void killPlugin()
 	{
+		getHookReplaceApi().kill();
 		getHookShopGuiApi().kill();
 		getHookFactionUID().kill();
 		getHookWorldGuard().kill();
 
 		getManagerContest().kill();
 		getManagerOutpost().kill();
-	}
-
-	private void attemptToRegisterPlaceholders()
-	{
-		if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null)
-		{
-			new Placeholders(this).register();
-		}
-		else
-		{
-			getLogger().warning("placeholderapi not found, placeholders will not work!");
-		}
 	}
 
 }
