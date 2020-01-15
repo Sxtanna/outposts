@@ -63,7 +63,10 @@ public final class OutpostConfParse implements Parse<Collection<Outpost>>
 					break;
 				}
 
-				here.setCapturePrev(iter.previous());
+				final var prev = iter.previous();
+
+				here.setCapturePrev(prev);
+				prev.setCaptureNext(here);
 
 				// undo previous iteration
 				iter.next();
@@ -71,6 +74,8 @@ public final class OutpostConfParse implements Parse<Collection<Outpost>>
 
 			// add all the newly loaded outposts to the data list
 			data.addAll(posts);
+
+			plugin.getLogger().info("loaded outpost path: " + posts);
 		}
 
 

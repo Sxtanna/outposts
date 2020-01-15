@@ -19,6 +19,7 @@ public final class Outpost implements State
 
 
 	private Outpost      capturePrev;
+	private Outpost      captureNext;
 	private int          captureTime;
 	private List<String> captureDone;
 
@@ -62,6 +63,17 @@ public final class Outpost implements State
 	public void setCapturePrev(@Nullable final Outpost capturePrev)
 	{
 		this.capturePrev = capturePrev;
+	}
+
+	@Nullable
+	public Outpost getCaptureNext()
+	{
+		return captureNext;
+	}
+
+	public void setCaptureNext(@Nullable final Outpost captureNext)
+	{
+		this.captureNext = captureNext;
 	}
 
 
@@ -137,7 +149,10 @@ public final class Outpost implements State
 	@Override
 	public String toString()
 	{
-		return String.format("Outpost[name: '%s', prev: %s]", name, capturePrev);
+		return String.format("Outpost[name: '%s', prev: %s, next: %s]",
+							 name,
+							 capturePrev == null ? "none" : capturePrev.getName(),
+							 captureNext == null ? "none" : captureNext.getName());
 	}
 
 }
