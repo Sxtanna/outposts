@@ -9,6 +9,8 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -117,6 +119,25 @@ public final class HookFactionUID implements Hooks
 		}
 
 		return Optional.of(faction.getId());
+	}
+
+
+	@NotNull
+	public Collection<Player> getPlayersInFaction(@NotNull final String factionUUID)
+	{
+		final var hooked = this.hooked.get();
+		if (hooked == null)
+		{
+			return Collections.emptyList();
+		}
+
+		final var faction = Factions.getInstance().getFactionById(factionUUID);
+		if (faction == null || !faction.isNormal())
+		{
+			return Collections.emptyList();
+		}
+
+		return faction.getOnlinePlayers();
 	}
 
 	public boolean inTheSameFaction(@NotNull final Player thisPlayer, @NotNull final Player thatPlayer)
