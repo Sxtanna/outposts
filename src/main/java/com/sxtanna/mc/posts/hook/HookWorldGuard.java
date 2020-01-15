@@ -100,8 +100,9 @@ public final class HookWorldGuard implements Hooks
 			return Optional.empty();
 		}
 
+
 		final var min = region.getMinimumPoint();
-		final var max = region.getMinimumPoint();
+		final var max = region.getMaximumPoint();
 
 		return Optional.of(Cuboid.of(new Vector(min.getX(), min.getY(), min.getZ()),
 									 new Vector(max.getX(), max.getY(), max.getZ())));
