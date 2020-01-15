@@ -77,7 +77,7 @@ public final class ManagerOutpost implements State
 
 		for (final var outpost : getAllOutposts())
 		{
-			if (!outpost.getCaptureZoneCube().inside(location))
+			if (!outpost.getCaptureZoneCube().inside(location.getBlockX(), location.getBlockY(), location.getBlockZ()))
 			{
 				continue;
 			}

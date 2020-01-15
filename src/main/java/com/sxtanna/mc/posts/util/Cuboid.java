@@ -37,7 +37,12 @@ public final class Cuboid
 
 	public boolean inside(@NotNull final Vector vector)
 	{
-		return vector.isInAABB(getMin(), getMax());
+		return inside(vector.getX(), vector.getY(), vector.getZ());
+	}
+
+	public boolean inside(final double x, final double y, final double z)
+	{
+		return x >= min.getX() && x <= max.getX() && y >= min.getY() && y <= max.getY() && z >= min.getZ() && z <= max.getZ();
 	}
 
 	public boolean nearby(@NotNull final Vector vector, final double radius)
