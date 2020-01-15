@@ -33,13 +33,18 @@ repositories {
     maven {
         url "http://repo.extendedclip.com/content/repositories/placeholderapi/"
     }
+    maven {
+        url "http://repo.mvdw-software.be/content/groups/public/"
+    }
 }
 
 dependencies {
     compileOnly "org.jetbrains:annotations:+"
     compileOnly "org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT"
     
-    compileOnly "me.clip:placeholderapi:+"
+    compileOnly("be.maximvdw:MVdWPlaceholderAPI:+") {
+        exclude group: 'org.spigotmc'
+    }
     
     compileOnly "com.massivecraft:Factions:+"
     compileOnly("com.sk89q.worldguard:worldguard-legacy:6.1.3-SNAPSHOT") {
