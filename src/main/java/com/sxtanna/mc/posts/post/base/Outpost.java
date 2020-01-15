@@ -1,6 +1,5 @@
 package com.sxtanna.mc.posts.post.base;
 
-import com.sxtanna.mc.posts.base.State;
 import com.sxtanna.mc.posts.util.Cuboid;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,8 +9,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
-public final class Outpost implements State
+public final class Outpost
 {
 
 	@NotNull
@@ -41,23 +41,10 @@ public final class Outpost implements State
 	}
 
 
-	@Override
-	public void load()
+	@NotNull
+	public Optional<Outpost> getCapturePrev()
 	{
-
-	}
-
-	@Override
-	public void kill()
-	{
-
-	}
-
-
-	@Nullable
-	public Outpost getCapturePrev()
-	{
-		return capturePrev;
+		return Optional.ofNullable(capturePrev);
 	}
 
 	public void setCapturePrev(@Nullable final Outpost capturePrev)
@@ -65,10 +52,11 @@ public final class Outpost implements State
 		this.capturePrev = capturePrev;
 	}
 
-	@Nullable
-	public Outpost getCaptureNext()
+
+	@NotNull
+	public Optional<Outpost> getCaptureNext()
 	{
-		return captureNext;
+		return Optional.ofNullable(captureNext);
 	}
 
 	public void setCaptureNext(@Nullable final Outpost captureNext)
@@ -135,6 +123,7 @@ public final class Outpost implements State
 		{
 			return false;
 		}
+
 		final Outpost outpost = (Outpost) o;
 		return getName().equals(outpost.getName());
 	}
@@ -149,7 +138,7 @@ public final class Outpost implements State
 	@Override
 	public String toString()
 	{
-		return String.format("Outpost[name: '%s', prev: %s, next: %s]",
+		return String.format("Outpost[name: '%s', prev: '%s', next: '%s']",
 							 name,
 							 capturePrev == null ? "none" : capturePrev.getName(),
 							 captureNext == null ? "none" : captureNext.getName());

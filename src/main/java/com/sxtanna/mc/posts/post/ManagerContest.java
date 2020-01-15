@@ -345,7 +345,7 @@ public final class ManagerContest implements State, Listener
 			cont.reset();
 			plugin.getServer().getPluginManager().callEvent(new ContestStateEvent(post, cont, cont.getCaptureState(), CaptureState.NEUTRAL));
 
-		} while ((post = post.getCaptureNext()) != null);
+		} while ((post = post.getCaptureNext().orElse(null)) != null);
 	}
 
 
@@ -438,12 +438,12 @@ public final class ManagerContest implements State, Listener
 	private boolean hasPreviousAlreadyCaptured(@NotNull final Player player, @NotNull final Outpost post)
 	{
 		final var prev = post.getCapturePrev();
-		if (prev == null)
+		if (prev.isEmpty())
 		{
 			return true; // just true if there is no previous requirement
 		}
 
-		final var cont = getContest(prev);
+		final var cont = getContest(prev.get());
 		if (cont.getCaptureState() != CaptureState.CLAIMED)
 		{
 			return false; // previous outpost isn't claimed

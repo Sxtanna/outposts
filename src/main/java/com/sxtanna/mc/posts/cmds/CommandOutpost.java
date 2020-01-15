@@ -167,25 +167,17 @@ public final class CommandOutpost implements State, CommandExecutor, TabComplete
 	{
 		final var message = new StringBuilder();
 
-		message.append("&7&lOutpost Info:&r");
+		message.append("&lOutpost Info:&r");
 
-		message.append('\n').append("&a").append(outpost.getName()).append(" &8[&e").append(contest.getCaptureState()).append("&8]");
+		message.append("\n  &a").append(outpost.getName()).append(" &8[&e").append(contest.getCaptureState()).append("&8]");
 
 		if (contest.getCaptureState() == CaptureState.CLAIMED || contest.getCaptureState() == CaptureState.CONTESTED_UNSEATING)
 		{
 			message.append(" &8[&c").append(contest.getCapturedUUID().flatMap(plugin.getHookFactionUID()::getFactionName).orElse("Unknown")).append("&8]");
 		}
 
-		if (outpost.getCapturePrev() != null)
-		{
-			message.append('\n').append("  &7<== &6").append(outpost.getCapturePrev().getName());
-		}
-
-		if (outpost.getCaptureNext() != null)
-		{
-			message.append('\n').append("  &7==> &6").append(outpost.getCaptureNext().getName());
-		}
-
+		outpost.getCapturePrev().ifPresent(prev -> message.append("\n    &7<== &6").append(prev.getName()));
+		outpost.getCaptureNext().ifPresent(next -> message.append("\n    &7==> &6").append(next.getName()));
 
 		reply(sender, message.toString());
 	}
