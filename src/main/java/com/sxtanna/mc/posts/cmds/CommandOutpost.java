@@ -13,6 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -144,6 +145,7 @@ public final class CommandOutpost implements State, CommandExecutor, TabComplete
 				break;
 		}
 
+		outs.sort(Comparator.naturalOrder());
 		outs.removeIf(text -> !text.toLowerCase().startsWith(last.toLowerCase()));
 
 		return outs;
