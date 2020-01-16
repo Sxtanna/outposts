@@ -61,6 +61,7 @@ public final class HookReplaceApi implements Hooks
 		if (outpost != null)
 		{
 			finalText = finalText.replace(":outpost_name:", outpost.getName());
+			finalText = finalText.replace(":outpost_uuid:", outpost.getUUID());
 		}
 
 		return finalText;
