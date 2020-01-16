@@ -11,7 +11,6 @@ import com.sxtanna.mc.posts.data.OutpostResetEvent;
 import com.sxtanna.mc.posts.post.base.Contest;
 import com.sxtanna.mc.posts.post.base.Outpost;
 import com.sxtanna.mc.posts.post.data.CaptureState;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -255,9 +254,6 @@ public final class ManagerContest implements State, Listener
 
 		cont.setCaptureState(event.getNewState());
 
-		final var message = String.format("\n\n%s | state change: \n  %sO: %s\n  %sN: %s", event.getOutpost().getName(), ChatColor.RED, event.getOldState(), ChatColor.GREEN, event.getNewState());
-		plugin.getServer().getOnlinePlayers().forEach(player -> player.sendMessage(message));
-
 		BukkitTask update = null;
 
 		switch (event.getNewState())
@@ -282,8 +278,6 @@ public final class ManagerContest implements State, Listener
 				{
 					break; // do nothing, this is a claim recovery
 				}
-
-				plugin.getServer().broadcastMessage(String.format("outpost %s has been claimed by %s", event.getOutpost().getName(), faction.orElse("unknown")));
 
 				cont.setCapturedUUID(faction.get());
 				break;
