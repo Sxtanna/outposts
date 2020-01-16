@@ -31,7 +31,7 @@ public final class HookShopGuiApi implements Hooks
 		{
 			hooked = new WeakReference<>(ShopGuiPlusApi.getPlugin());
 		}
-		catch (final NoClassDefFoundError ex)
+		catch (final Throwable ex)
 		{
 			hooked = new WeakReference<>(null);
 

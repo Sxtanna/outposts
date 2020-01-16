@@ -34,7 +34,7 @@ public final class HookFactionUID implements Hooks
 		{
 			hooked = new WeakReference<>(Factions.getInstance());
 		}
-		catch (final NoClassDefFoundError ex)
+		catch (final Throwable ex)
 		{
 			hooked = new WeakReference<>(null);
 

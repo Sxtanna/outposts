@@ -47,7 +47,7 @@ public final class HookWorldGuard implements Hooks
 		{
 			hooked = new WeakReference<>(WGBukkit.getPlugin());
 		}
-		catch (final NoClassDefFoundError ex)
+		catch (final Throwable ex)
 		{
 			hooked = new WeakReference<>(null);
 
