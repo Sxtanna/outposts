@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -88,7 +89,7 @@ public final class ManagerMessage implements State
 			throw new IllegalArgumentException("Placeholders must all have values: " + Arrays.toString(placeholders));
 		}
 
-		String message = cached.getOrDefault(lang, lang.getDefaultMessage());
+		var message = cached.getOrDefault(lang, lang.getDefaultMessage());
 		if (message.isBlank())
 		{
 			return "";
@@ -100,15 +101,15 @@ public final class ManagerMessage implements State
 		{
 			for (int i = 0; i < placeholders.length; i += 2)
 			{
-				final Object k = placeholders[i];
-				final Object v = placeholders[i + 1];
+				final var k = placeholders[i];
+				final var v = placeholders[i + 1];
 
 				if (!(k instanceof String))
 				{
 					throw new IllegalArgumentException("Placeholder values has an object out of position: " + k.getClass() + "[" + i + "]{" + k + "}");
 				}
 
-				message = message.replace(":" + k + ":", v.toString());
+				message = message.replace(":" + k + ":", Objects.toString(v));
 			}
 		}
 
