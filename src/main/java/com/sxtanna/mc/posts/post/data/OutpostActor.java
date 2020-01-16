@@ -3,6 +3,7 @@ package com.sxtanna.mc.posts.post.data;
 import com.sxtanna.mc.posts.Outposts;
 import com.sxtanna.mc.posts.post.base.Outpost;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +29,7 @@ public interface OutpostActor
 		@Override
 		public void act(@NotNull final Outposts plugin, final @NotNull Outpost outpost, final @NotNull Player player)
 		{
-			player.sendMessage(plugin.getHookReplaceApi().request(message, player, outpost));
+			player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getHookReplaceApi().request(message, player, outpost)));
 		}
 
 	}
@@ -51,7 +52,8 @@ public interface OutpostActor
 		@Override
 		public void act(@NotNull Outposts plugin, final @NotNull Outpost outpost, final @NotNull Player player)
 		{
-			Bukkit.dispatchCommand(console ? Bukkit.getConsoleSender() : player, plugin.getHookReplaceApi().request(command, player, outpost));
+			Bukkit.dispatchCommand(console ? Bukkit.getConsoleSender() : player,
+								   ChatColor.translateAlternateColorCodes('&', plugin.getHookReplaceApi().request(command, player, outpost)));
 		}
 
 	}
