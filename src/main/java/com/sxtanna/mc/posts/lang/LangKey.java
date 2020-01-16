@@ -15,6 +15,7 @@ public enum LangKey
 		this.defaultMessage = defaultMessage;
 	}
 
+
 	public String getDefaultMessage()
 	{
 		return defaultMessage;

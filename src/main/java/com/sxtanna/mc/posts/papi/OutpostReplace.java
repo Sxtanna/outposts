@@ -17,13 +17,12 @@ import java.util.function.BiFunction;
 public final class OutpostReplace implements BiFunction<OfflinePlayer, String, String>
 {
 
-	private static final String[] INPUTS =
-			{
-					"outposts_name",
-					"outposts_status",
-					"outposts_progress",
-					"outposts_capped",
-					};
+	private static final String[] INPUTS = {
+			"outposts_name",
+			"outposts_status",
+			"outposts_progress",
+			"outposts_capped",
+			};
 
 
 	@NotNull
@@ -36,18 +35,17 @@ public final class OutpostReplace implements BiFunction<OfflinePlayer, String, S
 	}
 
 
-	@NotNull
-	@Contract(pure = true)
-	public String[] getValidInputs()
-	{
-		return Arrays.copyOf(INPUTS, INPUTS.length);
-	}
-
-
 	@Override
 	public String apply(@Nullable final OfflinePlayer player, @NotNull final String input)
 	{
 		return requestValueFor(player, input.split("_")).orElse("");
+	}
+
+	@NotNull
+	@Contract(pure = true)
+	public String[] getValidInputs()
+	{
+		return INPUTS;
 	}
 
 
@@ -82,7 +80,6 @@ public final class OutpostReplace implements BiFunction<OfflinePlayer, String, S
 	private Optional<Contest> resolveContest(@Nullable final OfflinePlayer player, @Nullable final String name)
 	{
 		final Optional<Outpost> outpost;
-
 
 		if (name != null && !name.isBlank())
 		{

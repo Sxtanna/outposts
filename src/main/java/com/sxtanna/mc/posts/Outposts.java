@@ -59,11 +59,6 @@ public final class Outposts extends JavaPlugin
 	}
 
 
-	public CommandOutpost getCommandOutpost()
-	{
-		return commandOutpost;
-	}
-
 	public OutpostReplace getOutpostReplace()
 	{
 		return outpostReplace;

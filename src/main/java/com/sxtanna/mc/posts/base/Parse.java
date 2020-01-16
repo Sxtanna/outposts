@@ -12,7 +12,6 @@ public interface Parse<T>
 
 	Optional<T> pull(@NotNull final Outposts plugin, @NotNull final ConfigurationSection conf);
 
-
 	default void fail(@NotNull final Plugin plugin, @NotNull final ConfigurationSection conf, @NotNull final String name, @NotNull final String reason, final Object... arguments)
 	{
 		plugin.getLogger().warning(String.format("failed to load %s from section: `%s` : %s", name, conf.getCurrentPath(), String.format(reason, arguments)));

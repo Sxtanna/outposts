@@ -1,6 +1,7 @@
 package com.sxtanna.mc.posts.papi;
 
 import be.maximvdw.placeholderapi.PlaceholderAPI;
+import be.maximvdw.placeholderapi.PlaceholderReplaceEvent;
 import be.maximvdw.placeholderapi.PlaceholderReplacer;
 import com.sxtanna.mc.posts.Outposts;
 import org.bukkit.OfflinePlayer;
@@ -22,15 +23,9 @@ public final class OutpostReplaceMVDW implements PlaceholderReplacer, OutpostRep
 
 
 	@Override
-	public String onPlaceholderReplace(final be.maximvdw.placeholderapi.PlaceholderReplaceEvent event)
+	public String onPlaceholderReplace(final PlaceholderReplaceEvent event)
 	{
 		return plugin.getOutpostReplace().apply(event.getOfflinePlayer(), event.getPlaceholder());
-	}
-
-	@Override
-	public BiFunction<OfflinePlayer, String, String> getFunction()
-	{
-		return PlaceholderAPI::replacePlaceholders;
 	}
 
 
@@ -39,8 +34,14 @@ public final class OutpostReplaceMVDW implements PlaceholderReplacer, OutpostRep
 	{
 		for (final var input : plugin.getOutpostReplace().getValidInputs())
 		{
-			be.maximvdw.placeholderapi.PlaceholderAPI.registerPlaceholder(plugin, input, this);
+			PlaceholderAPI.registerPlaceholder(plugin, input, this);
 		}
+	}
+
+	@Override
+	public BiFunction<OfflinePlayer, String, String> getFunction()
+	{
+		return PlaceholderAPI::replacePlaceholders;
 	}
 
 }

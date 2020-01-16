@@ -3,7 +3,7 @@ package com.sxtanna.mc.posts.hook;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.integration.Econ;
-import com.sxtanna.mc.posts.base.Hooks;
+import com.sxtanna.mc.posts.base.State;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.logging.Level;
 
-public final class HookFactionUID implements Hooks
+public final class HookFactionUID implements State
 {
 
 	private final Plugin                  plugin;
@@ -49,7 +49,6 @@ public final class HookFactionUID implements Hooks
 		{
 			return;
 		}
-
 
 		hooked.clear();
 		hooked = null;
@@ -121,7 +120,6 @@ public final class HookFactionUID implements Hooks
 		return Optional.of(faction.getId());
 	}
 
-
 	@NotNull
 	public Collection<Player> getPlayersInFaction(@NotNull final String factionUUID)
 	{
@@ -138,26 +136,6 @@ public final class HookFactionUID implements Hooks
 		}
 
 		return faction.getOnlinePlayers();
-	}
-
-	public boolean inTheSameFaction(@NotNull final Player thisPlayer, @NotNull final Player thatPlayer)
-	{
-		final var hooked = this.hooked.get();
-		if (hooked == null)
-		{
-			return false;
-		}
-
-		final var thisFaction = getFactionUUID(thisPlayer);
-		final var thatFaction = getFactionUUID(thatPlayer);
-
-		if (thisFaction.isEmpty() || thatFaction.isEmpty())
-		{
-			return false;
-		}
-
-
-		return thisFaction.equals(thatFaction);
 	}
 
 }

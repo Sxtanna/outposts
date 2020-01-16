@@ -72,19 +72,16 @@ public final class CommandOutpost implements State, CommandExecutor, TabComplete
 				sendList(sender);
 				break;
 			case "info":
-
 				if (args.length < 2)
 				{
-					reply(sender,
-						  "you must specify which outpost you want the information of.");
+					reply(sender, "you must specify which outpost you want the information of.");
 				}
 				else
 				{
 					final var outpost = plugin.getManagerOutpost().getByName(args[1]);
 					if (outpost.isEmpty())
 					{
-						reply(sender,
-							  String.format("outpost with the name `%s` does not exist", args[1]));
+						reply(sender, String.format("outpost with the name `%s` does not exist", args[1]));
 					}
 					else
 					{
@@ -93,22 +90,18 @@ public final class CommandOutpost implements State, CommandExecutor, TabComplete
 				}
 				break;
 			case "reload":
-
 				try
 				{
 					plugin.reloadPlugin();
 
-					reply(sender,
-						  "successfully reloaded plugin");
+					reply(sender, "successfully reloaded plugin");
 				}
 				catch (final Exception ex)
 				{
 					plugin.getLogger().log(Level.SEVERE, "failed to reload plugin", ex);
 
-					reply(sender,
-						  String.format("failed to reload plugin: %s", ex.getMessage()));
+					reply(sender, String.format("failed to reload plugin: %s", ex.getMessage()));
 				}
-
 				break;
 		}
 
@@ -125,11 +118,9 @@ public final class CommandOutpost implements State, CommandExecutor, TabComplete
 		{
 			case 0:
 			case 1:
-
 				outs.add("info");
 				outs.add("list");
 				outs.add("reload");
-
 				break;
 			case 2:
 				if (!args[0].equalsIgnoreCase("info"))
@@ -141,7 +132,6 @@ public final class CommandOutpost implements State, CommandExecutor, TabComplete
 				{
 					outs.add(post.getUUID());
 				}
-
 				break;
 		}
 
@@ -170,7 +160,6 @@ public final class CommandOutpost implements State, CommandExecutor, TabComplete
 		final var message = new StringBuilder();
 
 		message.append("&lOutpost Info:&r");
-
 		message.append("\n  &a").append(outpost.getName()).append(" &8[&e").append(contest.getCaptureState()).append("&8]");
 
 		if (contest.getCaptureState() == CaptureState.CLAIMED || contest.getCaptureState() == CaptureState.CONTESTED_UNSEATING)

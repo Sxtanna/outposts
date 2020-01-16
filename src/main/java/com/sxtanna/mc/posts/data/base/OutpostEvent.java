@@ -14,7 +14,7 @@ public abstract class OutpostEvent extends Event
 	private final Contest contest;
 
 
-	public OutpostEvent(@NotNull final Outpost outpost, @NotNull final Contest contest)
+	protected OutpostEvent(@NotNull final Outpost outpost, @NotNull final Contest contest)
 	{
 		this.outpost = outpost;
 		this.contest = contest;

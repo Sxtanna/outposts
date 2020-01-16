@@ -50,7 +50,6 @@ public final class OutpostConfParse implements Parse<Collection<Outpost>>
 				OutpostDataParse.INSTANCE.pull(plugin, section.getConfigurationSection(tier)).ifPresent(posts::add);
 			}
 
-
 			// iterate over the outpost group and set their requirements
 			final var iter = posts.listIterator(posts.size());
 

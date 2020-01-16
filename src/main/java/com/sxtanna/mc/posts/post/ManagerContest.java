@@ -259,13 +259,14 @@ public final class ManagerContest implements State, Listener
 		switch (event.getNewState())
 		{
 			case NEUTRAL:
-				if (!cont.getInside().isEmpty() && allInsideAreTheSameFaction(cont))
+				plugin.getServer().getScheduler().runTask(plugin, () ->
 				{
-					later(() ->
-						  {
-							  plugin.getServer().getPluginManager().callEvent(new ContestStateEvent(event.getOutpost(), event.getContest(), event.getContest().getCaptureState(), CaptureState.CAPTURING));
-						  });
-				}
+					if (!cont.getInside().isEmpty() && allInsideAreTheSameFaction(cont))
+					{
+						plugin.getServer().getPluginManager().callEvent(new ContestStateEvent(event.getOutpost(), event.getContest(), event.getContest().getCaptureState(), CaptureState.CAPTURING));
+					}
+				});
+
 				break;
 			case CLAIMED:
 				final var faction = singleFactionInsideOrNull(cont);
@@ -282,11 +283,12 @@ public final class ManagerContest implements State, Listener
 				cont.setCapturedUUID(faction.get());
 				break;
 			case CAPTURING:
-				update = timer(20L, () ->
+				// impossible state?
+				update = plugin.getServer().getScheduler().runTaskTimer(plugin, () ->
 				{
-					final var newLevel = singleFactionInsideOrNull(cont).map(cont::addLevel).orElse(-1);
+					final var newLevel1 = singleFactionInsideOrNull(cont).map(cont::addLevel).orElse(-1);
 
-					if (newLevel >= post.getCaptureTime())
+					if (newLevel1 >= post.getCaptureTime())
 					{
 						plugin.getServer().getPluginManager().callEvent(new ContestStateEvent(event.getOutpost(), event.getContest(), event.getContest().getCaptureState(), CaptureState.CLAIMED));
 
@@ -300,11 +302,11 @@ public final class ManagerContest implements State, Listener
 
 						plugin.getServer().getPluginManager().callEvent(new OutpostClaimEvent(event.getOutpost(), event.getContest(), name.get(), uuid.get()));
 					}
-				});
+				}, 0L, 20L);
 				break;
 			case DWINDLING:
 			case UNSEATING:
-				update = timer(20L, () ->
+				update = plugin.getServer().getScheduler().runTaskTimer(plugin, () ->
 				{
 					final var newLevel = singleFactionLevelsOrNull(cont).or(cont::getCapturedUUID).map(cont::subLevel).orElse(-1);
 
@@ -312,7 +314,7 @@ public final class ManagerContest implements State, Listener
 					{
 						plugin.getServer().getPluginManager().callEvent(new OutpostResetEvent(event.getOutpost(), event.getContest()));
 					}
-				});
+				}, 0L, 20L);
 				break;
 			case CONTESTED_CAPTURING:
 			case CONTESTED_UNSEATING:
@@ -388,7 +390,6 @@ public final class ManagerContest implements State, Listener
 		{
 			plugin.getServer().getPluginManager().callEvent(new OutpostLeaveEvent(fromOutpost, getContest(fromOutpost), player));
 		}
-
 
 		// handle entering an outpost
 		for (final String zone : intoZones)
@@ -468,17 +469,6 @@ public final class ManagerContest implements State, Listener
 		}
 
 		return memberOfTheCapturedFaction(player, cont);
-	}
-
-
-	private BukkitTask later(@NotNull Runnable runnable)
-	{
-		return plugin.getServer().getScheduler().runTask(plugin, runnable);
-	}
-
-	private BukkitTask timer(long period, @NotNull final Runnable runnable)
-	{
-		return plugin.getServer().getScheduler().runTaskTimer(plugin, runnable, 0L, period);
 	}
 
 }

@@ -81,6 +81,7 @@ public final class Cuboid
 		return String.format("Cuboid[min: %s, max: %s]", min, max);
 	}
 
+
 	@NotNull
 	public static Cuboid of(@NotNull final Vector min, @NotNull final Vector max)
 	{

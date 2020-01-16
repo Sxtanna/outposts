@@ -45,22 +45,24 @@ public final class OutpostReplacePAPI extends PlaceholderExpansion implements Ou
 		return true;
 	}
 
+
 	@Override
 	public String onRequest(final OfflinePlayer player, final String params)
 	{
 		return plugin.getOutpostReplace().apply(player, params);
 	}
 
-	@Override
-	public BiFunction<OfflinePlayer, String, String> getFunction()
-	{
-		return PlaceholderAPI::setPlaceholders;
-	}
 
 	@Override
 	public void selfRegister()
 	{
 		register();
+	}
+
+	@Override
+	public BiFunction<OfflinePlayer, String, String> getFunction()
+	{
+		return PlaceholderAPI::setPlaceholders;
 	}
 
 }

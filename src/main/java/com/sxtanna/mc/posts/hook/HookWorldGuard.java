@@ -7,8 +7,8 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.session.MoveType;
 import com.sk89q.worldguard.session.Session;
 import com.sk89q.worldguard.session.handler.Handler;
-import com.sxtanna.mc.posts.base.Hooks;
 import com.sxtanna.mc.posts.base.Moved;
+import com.sxtanna.mc.posts.base.State;
 import com.sxtanna.mc.posts.util.Cuboid;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -19,19 +19,18 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-public final class HookWorldGuard implements Hooks
+public final class HookWorldGuard implements State
 {
 
 	private final Plugin                          plugin;
-	private       WeakReference<WorldGuardPlugin> hooked;
 	private final List<Moved>                     cached = new ArrayList<>();
+	private       WeakReference<WorldGuardPlugin> hooked;
 
 
 	public HookWorldGuard(final Plugin plugin)
@@ -45,7 +44,10 @@ public final class HookWorldGuard implements Hooks
 	{
 		try
 		{
-			hooked = new WeakReference<>(WGBukkit.getPlugin());
+			final var plugin = WGBukkit.getPlugin();
+			plugin.getSessionManager().registerHandler(new MoveFactory(), null);
+
+			hooked = new WeakReference<>(plugin);
 		}
 		catch (final Throwable ex)
 		{
@@ -53,14 +55,6 @@ public final class HookWorldGuard implements Hooks
 
 			plugin.getLogger().log(Level.WARNING, "failed to load worldguard hook", ex);
 		}
-
-		final var hooked = this.hooked.get();
-		if (hooked == null)
-		{
-			return;
-		}
-
-		hooked.getSessionManager().registerHandler(new MoveFactory(), null);
 	}
 
 	@Override
@@ -73,10 +67,8 @@ public final class HookWorldGuard implements Hooks
 			return;
 		}
 
-
 		hooked.clear();
 		hooked = null;
-
 	}
 
 
@@ -128,11 +120,12 @@ public final class HookWorldGuard implements Hooks
 			super(session);
 		}
 
+
 		@Override
 		public boolean onCrossBoundary(final Player player, final Location from, final Location to, final ApplicableRegionSet toSet, final Set<ProtectedRegion> intoRegionSet, final Set<ProtectedRegion> fromRegionSet, final MoveType moveType)
 		{
-			final var fromRegions = names(fromRegionSet);
-			final var intoRegions = names(intoRegionSet);
+			final var fromRegions = fromRegionSet.stream().map(ProtectedRegion::getId).collect(Collectors.toSet());
+			final var intoRegions = intoRegionSet.stream().map(ProtectedRegion::getId).collect(Collectors.toSet());
 
 			for (final Moved moved : cached)
 			{
@@ -142,13 +135,6 @@ public final class HookWorldGuard implements Hooks
 			return true;
 		}
 
-	}
-
-
-	@NotNull
-	private static Collection<String> names(@NotNull final Collection<ProtectedRegion> regions)
-	{
-		return regions.stream().map(ProtectedRegion::getId).collect(Collectors.toSet());
 	}
 
 }

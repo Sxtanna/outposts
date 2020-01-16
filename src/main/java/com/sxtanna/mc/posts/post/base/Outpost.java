@@ -142,7 +142,6 @@ public final class Outpost
 		return Objects.hash(getUUID());
 	}
 
-
 	@Override
 	public String toString()
 	{

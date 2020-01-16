@@ -1,6 +1,6 @@
 package com.sxtanna.mc.posts.hook;
 
-import com.sxtanna.mc.posts.base.Hooks;
+import com.sxtanna.mc.posts.base.State;
 import net.brcdev.shopgui.ShopGuiPlugin;
 import net.brcdev.shopgui.ShopGuiPlusApi;
 import net.brcdev.shopgui.modifier.ModifierType;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.ref.WeakReference;
 import java.util.logging.Level;
 
-public final class HookShopGuiApi implements Hooks
+public final class HookShopGuiApi implements State
 {
 
 	private final Plugin                       plugin;
@@ -46,7 +46,6 @@ public final class HookShopGuiApi implements Hooks
 		{
 			return;
 		}
-
 
 		hooked.clear();
 		hooked = null;

@@ -2,7 +2,7 @@ package com.sxtanna.mc.posts.hook;
 
 import com.google.common.collect.Lists;
 import com.sxtanna.mc.posts.Outposts;
-import com.sxtanna.mc.posts.base.Hooks;
+import com.sxtanna.mc.posts.base.State;
 import com.sxtanna.mc.posts.papi.OutpostReplaceMVDW;
 import com.sxtanna.mc.posts.papi.OutpostReplacePAPI;
 import com.sxtanna.mc.posts.post.base.Outpost;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.BiFunction;
 
-public final class HookReplaceApi implements Hooks
+public final class HookReplaceApi implements State
 {
 
 	@NotNull
@@ -111,6 +111,5 @@ public final class HookReplaceApi implements Hooks
 			plugin.getLogger().warning("failed to register MVDW placeholders: " + ex.getMessage());
 		}
 	}
-
 
 }
