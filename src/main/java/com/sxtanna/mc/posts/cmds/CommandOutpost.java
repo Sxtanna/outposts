@@ -139,7 +139,7 @@ public final class CommandOutpost implements State, CommandExecutor, TabComplete
 
 				for (final var post : plugin.getManagerOutpost().getAllOutposts())
 				{
-					outs.add(post.getName().toLowerCase().replace(' ', '_'));
+					outs.add(post.getUUID());
 				}
 
 				break;

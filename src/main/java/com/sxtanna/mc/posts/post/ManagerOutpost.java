@@ -99,7 +99,7 @@ public final class ManagerOutpost implements State
 
 		for (final Outpost post : pull.get())
 		{
-			nameToPost.put(post.getName().replace(' ', '_').toLowerCase(), post);
+			nameToPost.put(post.getUUID(), post);
 			zoneToPost.put(post.getCaptureZoneName().split(";")[1], post);
 		}
 	}

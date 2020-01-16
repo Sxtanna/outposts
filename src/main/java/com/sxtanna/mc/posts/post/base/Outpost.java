@@ -2,6 +2,7 @@ package com.sxtanna.mc.posts.post.base;
 
 import com.sxtanna.mc.posts.post.data.OutpostActor;
 import com.sxtanna.mc.posts.util.Cuboid;
+import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,6 +40,12 @@ public final class Outpost
 	public String getName()
 	{
 		return name;
+	}
+
+	@NotNull
+	public String getUUID()
+	{
+		return ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', getName())).replace(" ", "_").toLowerCase();
 	}
 
 
@@ -126,13 +133,13 @@ public final class Outpost
 		}
 
 		final Outpost outpost = (Outpost) o;
-		return getName().equals(outpost.getName());
+		return getUUID().equals(outpost.getUUID());
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(getName());
+		return Objects.hash(getUUID());
 	}
 
 
