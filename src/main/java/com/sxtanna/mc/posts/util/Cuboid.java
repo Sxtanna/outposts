@@ -1,14 +1,18 @@
 package com.sxtanna.mc.posts.util;
 
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.lang.ref.WeakReference;
 import java.util.Objects;
 
 public final class Cuboid
 {
 
-	private static final Cuboid NONE = Cuboid.of(new Vector(0, 0, 0), new Vector(0, 0, 0));
+	private static final Cuboid NONE = Cuboid.of(new Vector(0, 0, 0), new Vector(0, 0, 0), null);
 
 
 	@NotNull
@@ -16,11 +20,15 @@ public final class Cuboid
 	@NotNull
 	private final Vector max;
 
+	@NotNull
+	private final WeakReference<World> world;
 
-	private Cuboid(@NotNull final Vector min, @NotNull final Vector max)
+
+	private Cuboid(@NotNull final Vector min, @NotNull final Vector max, @Nullable final World world)
 	{
 		this.min = min;
 		this.max = max;
+		this.world = new WeakReference<>(world);
 	}
 
 
@@ -36,20 +44,38 @@ public final class Cuboid
 		return max;
 	}
 
-
-	public boolean inside(@NotNull final Vector vector)
+	@Nullable
+	public World getWorld()
 	{
-		return inside(vector.getX(), vector.getY(), vector.getZ());
+		return world.get();
 	}
 
-	public boolean inside(final double x, final double y, final double z)
+
+	public boolean inside(@NotNull final Location location)
 	{
-		return x >= min.getX() && x <= max.getX() && y >= min.getY() && y <= max.getY() && z >= min.getZ() && z <= max.getZ();
+		final var world = getWorld();
+		if (world == null || location.getWorld() == null || !world.getUID().equals(location.getWorld().getUID()))
+		{
+			return false;
+		}
+
+		final var vector = location.toVector();
+		vector.setX(vector.getBlockX());
+		vector.setY(vector.getBlockY());
+		vector.setZ(vector.getBlockZ());
+
+		return vector.isInAABB(getMin(), getMax());
 	}
 
-	public boolean nearby(@NotNull final Vector vector, final double radius)
+	public boolean nearby(@NotNull final Location location, final double radius)
 	{
-		return vector.isInSphere(getMax().subtract(getMin()), radius);
+		final var world = getWorld();
+		if (world == null || location.getWorld() == null || !world.getUID().equals(location.getWorld().getUID()))
+		{
+			return false;
+		}
+
+		return location.toVector().isInSphere(getMax().getMidpoint(getMin()), radius);
 	}
 
 
@@ -83,9 +109,9 @@ public final class Cuboid
 
 
 	@NotNull
-	public static Cuboid of(@NotNull final Vector min, @NotNull final Vector max)
+	public static Cuboid of(@NotNull final Vector min, @NotNull final Vector max, @NotNull final World world)
 	{
-		return new Cuboid(min, max);
+		return new Cuboid(min, max, world);
 	}
 
 	@NotNull

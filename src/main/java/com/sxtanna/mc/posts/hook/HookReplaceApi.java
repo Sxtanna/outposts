@@ -43,7 +43,7 @@ public final class HookReplaceApi implements State
 	}
 
 
-	public String request(@NotNull final String text, @Nullable final OfflinePlayer player, @Nullable final Outpost outpost)
+	public String request(@NotNull final String text, @Nullable final OfflinePlayer player)
 	{
 		var finalText = text;
 
@@ -52,11 +52,17 @@ public final class HookReplaceApi implements State
 			finalText = replacer.apply(player, finalText);
 		}
 
-
 		if (player != null)
 		{
 			finalText = finalText.replace(":player_name:", player.getName());
 		}
+
+		return finalText;
+	}
+
+	public String request(@NotNull final String text, @Nullable final OfflinePlayer player, @Nullable final Outpost outpost)
+	{
+		var finalText = request(text, player);
 
 		if (outpost != null)
 		{

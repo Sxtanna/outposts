@@ -8,6 +8,7 @@ import com.sxtanna.mc.posts.data.OutpostClaimEvent;
 import com.sxtanna.mc.posts.data.OutpostEnterEvent;
 import com.sxtanna.mc.posts.data.OutpostLeaveEvent;
 import com.sxtanna.mc.posts.data.OutpostResetEvent;
+import com.sxtanna.mc.posts.lang.Lang;
 import com.sxtanna.mc.posts.post.base.Contest;
 import com.sxtanna.mc.posts.post.base.Outpost;
 import com.sxtanna.mc.posts.post.data.CaptureState;
@@ -76,6 +77,10 @@ public final class ManagerContest implements State, Listener
 
 		// record them into the contest
 		cont.enter(faction.get(), event.getPlayer());
+
+		plugin.getManagerMessage().send(event.getPlayer(), Lang.OUTPOST_ENTER,
+										"outpost_name", post.getName(),
+										"outpost_uuid", post.getUUID());
 		//</editor-fold>
 
 		//<editor-fold desc="state logic">
@@ -162,6 +167,10 @@ public final class ManagerContest implements State, Listener
 
 		// remove them frp, the contest
 		cont.leave(faction.get(), event.getPlayer());
+
+		plugin.getManagerMessage().send(event.getPlayer(), Lang.OUTPOST_LEAVE,
+										"outpost_name", post.getName(),
+										"outpost_uuid", post.getUUID());
 		//</editor-fold>
 
 		//<editor-fold desc="state logic">
@@ -266,21 +275,7 @@ public final class ManagerContest implements State, Listener
 
 				plugin.getServer().getScheduler().runTaskLater(plugin, () ->
 				{
-					CaptureState newState;
-
-					if (allInsideAreTheSameFaction(cont))
-					{
-						newState = CaptureState.CAPTURING;
-					}
-					else
-					{
-						newState = CaptureState.CONTESTED_CAPTURING;
-					}
-
-					if (newState != event.getContest().getCaptureState())
-					{
-						plugin.getServer().getPluginManager().callEvent(new ContestStateEvent(event.getOutpost(), event.getContest(), event.getContest().getCaptureState(), newState));
-					}
+					cont.getPlayersInside().forEach(player -> plugin.getServer().getPluginManager().callEvent(new OutpostEnterEvent(event.getOutpost(), event.getContest(), player)));
 				}, 1L);
 				break;
 			case CLAIMED:
@@ -292,13 +287,31 @@ public final class ManagerContest implements State, Listener
 
 				if (cont.getCapturedUUID().equals(faction))
 				{
+					plugin.getManagerMessage().send(Lang.OUTPOST_STATE_FORTIFY,
+													"outpost_name", post.getName(),
+													"outpost_uuid", post.getUUID(),
+													"faction_name", cont.getCapturedUUID().flatMap(plugin.getHookFactionUID()::getFactionName).orElse("Unknown"));
+
 					break; // do nothing, this is a claim recovery
 				}
 
 				cont.setCapturedUUID(faction.get());
+
+				final var name = faction.flatMap(plugin.getHookFactionUID()::getFactionName);
+
+				if (name.isEmpty())
+				{
+					return; // impossible state?
+				}
+
+				plugin.getServer().getPluginManager().callEvent(new OutpostClaimEvent(event.getOutpost(), event.getContest(), name.get(), faction.get()));
 				break;
 			case CAPTURING:
-				// impossible state?
+				plugin.getManagerMessage().send(Lang.OUTPOST_STATE_CAPTURING,
+												"outpost_name", post.getName(),
+												"outpost_uuid", post.getUUID(),
+												"faction_name", singleFactionInsideOrNull(cont).flatMap(plugin.getHookFactionUID()::getFactionName).orElse("Unknown"));
+
 				update = plugin.getServer().getScheduler().runTaskTimer(plugin, () ->
 				{
 					final var newLevel1 = singleFactionInsideOrNull(cont).map(cont::addLevel).orElse(-1);
@@ -306,21 +319,20 @@ public final class ManagerContest implements State, Listener
 					if (newLevel1 >= post.getCaptureTime())
 					{
 						plugin.getServer().getPluginManager().callEvent(new ContestStateEvent(event.getOutpost(), event.getContest(), event.getContest().getCaptureState(), CaptureState.CLAIMED));
-
-						final var uuid = cont.getCapturedUUID();
-						final var name = uuid.flatMap(plugin.getHookFactionUID()::getFactionName);
-
-						if (uuid.isEmpty() || name.isEmpty())
-						{
-							return; // impossible state?
-						}
-
-						plugin.getServer().getPluginManager().callEvent(new OutpostClaimEvent(event.getOutpost(), event.getContest(), name.get(), uuid.get()));
 					}
 				}, 0L, 20L);
 				break;
 			case DWINDLING:
 			case UNSEATING:
+
+				if (event.getNewState() == CaptureState.UNSEATING)
+				{
+					plugin.getManagerMessage().send(Lang.OUTPOST_STATE_UNSEATING,
+													"outpost_name", post.getName(),
+													"outpost_uuid", post.getUUID(),
+													"faction_name", singleFactionInsideOrNull(cont).flatMap(plugin.getHookFactionUID()::getFactionName).orElse("Multiple Factions"));
+				}
+
 				update = plugin.getServer().getScheduler().runTaskTimer(plugin, () ->
 				{
 					final var newLevel = singleFactionLevelsOrNull(cont).or(cont::getCapturedUUID).map(cont::subLevel).orElse(-1);
@@ -332,8 +344,15 @@ public final class ManagerContest implements State, Listener
 				}, 0L, 20L);
 				break;
 			case CONTESTED_CAPTURING:
+				plugin.getManagerMessage().send(Lang.OUTPOST_STATE_CONTESTED_CAPTURING,
+												"outpost_name", post.getName(),
+												"outpost_uuid", post.getUUID());
+				break;
 			case CONTESTED_UNSEATING:
-				// do nothing
+				plugin.getManagerMessage().send(Lang.OUTPOST_STATE_CONTESTED_UNSEATING,
+												"outpost_name", post.getName(),
+												"outpost_uuid", post.getUUID(),
+												"faction_name", cont.getCapturedUUID().flatMap(plugin.getHookFactionUID()::getFactionName).orElse("Unknown"));
 				break;
 		}
 
@@ -347,21 +366,36 @@ public final class ManagerContest implements State, Listener
 
 		do
 		{
+			System.out.println("On post: " + post.getName());
+
 			var cont = getContest(post);
 			if (cont.getCaptureState() == CaptureState.NEUTRAL)
 			{
+				System.out.println("already neutral");
 				break;
 			}
 
+
+			System.out.println("updating to neutral");
+
 			cont.reset();
 			plugin.getServer().getPluginManager().callEvent(new ContestStateEvent(post, cont, cont.getCaptureState(), CaptureState.NEUTRAL));
-
 		} while ((post = post.getCaptureNext().orElse(null)) != null);
+
+		// TODO move this message to a timer that every so often announces that an outpost is neutral
+		plugin.getManagerMessage().send(Lang.OUTPOST_STATE_NEUTRAL,
+										"outpost_name", event.getOutpost().getName(),
+										"outpost_uuid", event.getOutpost().getUUID());
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onOutpostClaim(@NotNull final OutpostClaimEvent event)
 	{
+		plugin.getManagerMessage().send(Lang.OUTPOST_STATE_CLAIMED,
+										"outpost_name", event.getOutpost().getName(),
+										"outpost_uuid", event.getOutpost().getUUID(),
+										"faction_name", event.getFactionName());
+
 		final var actors = event.getOutpost().getCaptureDone();
 		if (actors.isEmpty())
 		{

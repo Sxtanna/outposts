@@ -9,15 +9,16 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
 public final class OutpostReplace implements BiFunction<OfflinePlayer, String, String>
 {
 
-	private static final String[] INPUTS = {
+	private static final DecimalFormat FORMAT = new DecimalFormat("#0");
+	private static final String[]      INPUTS = {
 			"outposts_name",
 			"outposts_status",
 			"outposts_progress",
@@ -69,7 +70,7 @@ public final class OutpostReplace implements BiFunction<OfflinePlayer, String, S
 			case "status":
 				return cont.map(Contest::getCaptureState).map(CaptureState::name);
 			case "progress":
-				return cont.map(Contest::getCapturePercentage).map(Objects::toString);
+				return cont.map(Contest::getCapturePercentage).map(FORMAT::format);
 			case "capped":
 				return cont.flatMap(Contest::getCapturedUUID).flatMap(plugin.getHookFactionUID()::getFactionName);
 		}

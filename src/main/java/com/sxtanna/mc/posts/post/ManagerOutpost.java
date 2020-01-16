@@ -73,11 +73,11 @@ public final class ManagerOutpost implements State
 	@NotNull
 	public Optional<Outpost> getByLocation(@NotNull final Supplier<Location> supplier)
 	{
-		final var location = supplier.get().toVector();
+		final var location = supplier.get();
 
 		for (final var outpost : getAllOutposts())
 		{
-			if (!outpost.getCaptureZoneCube().inside(location.getBlockX(), location.getBlockY(), location.getBlockZ()))
+			if (!outpost.getCaptureZoneCube().inside(location))
 			{
 				continue;
 			}

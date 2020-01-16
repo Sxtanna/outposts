@@ -7,13 +7,13 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.session.MoveType;
 import com.sk89q.worldguard.session.Session;
 import com.sk89q.worldguard.session.handler.Handler;
+import com.sxtanna.mc.posts.Outposts;
 import com.sxtanna.mc.posts.base.Moved;
 import com.sxtanna.mc.posts.base.State;
 import com.sxtanna.mc.posts.util.Cuboid;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,12 +28,14 @@ import java.util.stream.Collectors;
 public final class HookWorldGuard implements State
 {
 
-	private final Plugin                          plugin;
+	@NotNull
+	private final Outposts                        plugin;
+	@NotNull
 	private final List<Moved>                     cached = new ArrayList<>();
 	private       WeakReference<WorldGuardPlugin> hooked;
 
 
-	public HookWorldGuard(final Plugin plugin)
+	public HookWorldGuard(@NotNull final Outposts plugin)
 	{
 		this.plugin = plugin;
 	}
@@ -80,7 +82,6 @@ public final class HookWorldGuard implements State
 	public Optional<Cuboid> getCuboidOfRegion(@NotNull final World world, @NotNull final String name)
 	{
 		final var hooked = this.hooked.get();
-
 		if (hooked == null)
 		{
 			return Optional.empty();
@@ -97,7 +98,8 @@ public final class HookWorldGuard implements State
 		final var max = region.getMaximumPoint();
 
 		return Optional.of(Cuboid.of(new Vector(min.getX(), min.getY(), min.getZ()),
-									 new Vector(max.getX(), max.getY(), max.getZ())));
+									 new Vector(max.getX(), max.getY(), max.getZ()),
+									 world));
 	}
 
 

@@ -7,21 +7,35 @@ import com.sxtanna.mc.posts.hook.HookShopGuiApi;
 import com.sxtanna.mc.posts.hook.HookWorldGuard;
 import com.sxtanna.mc.posts.papi.OutpostReplace;
 import com.sxtanna.mc.posts.post.ManagerContest;
+import com.sxtanna.mc.posts.post.ManagerMessage;
 import com.sxtanna.mc.posts.post.ManagerOutpost;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 public final class Outposts extends JavaPlugin
 {
 
+	@NotNull
 	private final OutpostReplace outpostReplace = new OutpostReplace(this);
+	@NotNull
 	private final CommandOutpost commandOutpost = new CommandOutpost(this);
 
-	private final ManagerOutpost managerOutpost = new ManagerOutpost(this);
-	private final ManagerContest managerContest = new ManagerContest(this);
 
+	@NotNull
+	private final ManagerOutpost managerOutpost = new ManagerOutpost(this);
+	@NotNull
+	private final ManagerContest managerContest = new ManagerContest(this);
+	@NotNull
+	private final ManagerMessage managerMessage = new ManagerMessage(this);
+
+
+	@NotNull
 	private final HookReplaceApi hookReplaceApi = new HookReplaceApi(this);
+	@NotNull
 	private final HookFactionUID hookFactionUID = new HookFactionUID(this);
+	@NotNull
 	private final HookShopGuiApi hookShopGuiApi = new HookShopGuiApi(this);
+	@NotNull
 	private final HookWorldGuard hookWorldGuard = new HookWorldGuard(this);
 
 
@@ -48,38 +62,51 @@ public final class Outposts extends JavaPlugin
 	}
 
 
+	@NotNull
 	public ManagerOutpost getManagerOutpost()
 	{
 		return managerOutpost;
 	}
 
+	@NotNull
 	public ManagerContest getManagerContest()
 	{
 		return managerContest;
 	}
 
+	@NotNull
+	public ManagerMessage getManagerMessage()
+	{
+		return managerMessage;
+	}
 
+
+	@NotNull
 	public OutpostReplace getOutpostReplace()
 	{
 		return outpostReplace;
 	}
 
 
+	@NotNull
 	public HookReplaceApi getHookReplaceApi()
 	{
 		return hookReplaceApi;
 	}
 
+	@NotNull
 	public HookFactionUID getHookFactionUID()
 	{
 		return hookFactionUID;
 	}
 
+	@NotNull
 	public HookShopGuiApi getHookShopGuiApi()
 	{
 		return hookShopGuiApi;
 	}
 
+	@NotNull
 	public HookWorldGuard getHookWorldGuard()
 	{
 		return hookWorldGuard;
@@ -103,6 +130,7 @@ public final class Outposts extends JavaPlugin
 		getHookFactionUID().load();
 		getHookWorldGuard().load();
 
+		getManagerMessage().load();
 		getManagerOutpost().load();
 		getManagerContest().load();
 	}
@@ -114,6 +142,7 @@ public final class Outposts extends JavaPlugin
 		getHookFactionUID().kill();
 		getHookWorldGuard().kill();
 
+		getManagerMessage().kill();
 		getManagerContest().kill();
 		getManagerOutpost().kill();
 	}

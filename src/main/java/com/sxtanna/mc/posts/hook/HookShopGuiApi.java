@@ -1,11 +1,11 @@
 package com.sxtanna.mc.posts.hook;
 
+import com.sxtanna.mc.posts.Outposts;
 import com.sxtanna.mc.posts.base.State;
 import net.brcdev.shopgui.ShopGuiPlugin;
 import net.brcdev.shopgui.ShopGuiPlusApi;
 import net.brcdev.shopgui.modifier.ModifierType;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
@@ -14,11 +14,12 @@ import java.util.logging.Level;
 public final class HookShopGuiApi implements State
 {
 
-	private final Plugin                       plugin;
+	@NotNull
+	private final Outposts                     plugin;
 	private       WeakReference<ShopGuiPlugin> hooked;
 
 
-	public HookShopGuiApi(final Plugin plugin)
+	public HookShopGuiApi(@NotNull final Outposts plugin)
 	{
 		this.plugin = plugin;
 	}

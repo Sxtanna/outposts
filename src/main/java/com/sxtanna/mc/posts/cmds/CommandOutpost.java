@@ -3,6 +3,7 @@ package com.sxtanna.mc.posts.cmds;
 import com.google.common.collect.Lists;
 import com.sxtanna.mc.posts.Outposts;
 import com.sxtanna.mc.posts.base.State;
+import com.sxtanna.mc.posts.lang.Lang;
 import com.sxtanna.mc.posts.post.base.Contest;
 import com.sxtanna.mc.posts.post.base.Outpost;
 import com.sxtanna.mc.posts.post.data.CaptureState;
@@ -11,6 +12,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
@@ -60,8 +62,13 @@ public final class CommandOutpost implements State, CommandExecutor, TabComplete
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
 	{
-		if (args.length == 0)
+		if (args.length == 0 || args[0].equalsIgnoreCase("help"))
 		{
+			if (sender.hasPermission("outposts.command"))
+			{
+				sendHelp(sender);
+			}
+
 			// maybe send usage
 			return true;
 		}
@@ -89,18 +96,30 @@ public final class CommandOutpost implements State, CommandExecutor, TabComplete
 					}
 				}
 				break;
+			case "toggle":
+				if (!(sender instanceof Player))
+				{
+					return true;
+				}
+
+				final var player = ((Player) sender);
+				plugin.getManagerMessage().toggleMessagesTo(player.getUniqueId());
+
+				plugin.getManagerMessage().send(player, Lang.COMMAND_TOGGLE_MSGS,
+												"toggle_status", plugin.getManagerMessage().wantsMessages(player.getUniqueId()) ? "on" : "off");
+				break;
 			case "reload":
 				try
 				{
 					plugin.reloadPlugin();
 
-					reply(sender, "successfully reloaded plugin");
+					plugin.getManagerMessage().send(sender, Lang.COMMAND_RELOAD_PASS);
 				}
 				catch (final Exception ex)
 				{
 					plugin.getLogger().log(Level.SEVERE, "failed to reload plugin", ex);
 
-					reply(sender, String.format("failed to reload plugin: %s", ex.getMessage()));
+					plugin.getManagerMessage().send(sender, Lang.COMMAND_RELOAD_FAIL, "fail_message", ex.getMessage());
 				}
 				break;
 		}
@@ -118,12 +137,29 @@ public final class CommandOutpost implements State, CommandExecutor, TabComplete
 		{
 			case 0:
 			case 1:
-				outs.add("info");
-				outs.add("list");
-				outs.add("reload");
+				if (sender.hasPermission("outposts.command"))
+				{
+					outs.add("help");
+				}
+				if (sender.hasPermission("outposts.command.info"))
+				{
+					outs.add("info");
+				}
+				if (sender.hasPermission("outposts.command.list"))
+				{
+					outs.add("list");
+				}
+				if (sender.hasPermission("outposts.command.toggle"))
+				{
+					outs.add("toggle");
+				}
+				if (sender.hasPermission("outposts.command.reload"))
+				{
+					outs.add("reload");
+				}
 				break;
 			case 2:
-				if (!args[0].equalsIgnoreCase("info"))
+				if (!args[0].equalsIgnoreCase("info") || !sender.hasPermission("outposts.command.info"))
 				{
 					break;
 				}
@@ -147,6 +183,32 @@ public final class CommandOutpost implements State, CommandExecutor, TabComplete
 		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', String.join("\n", message)));
 	}
 
+
+	private void sendHelp(@NotNull final CommandSender sender)
+	{
+		final var message = new StringBuilder();
+
+		message.append("&c&lOutposts Commands&r").append('\n');
+
+		if (sender.hasPermission("outposts.command.info"))
+		{
+			message.append("  &7/outposts info").append('\n');
+		}
+		if (sender.hasPermission("outposts.command.list"))
+		{
+			message.append("  &7/outposts list").append('\n');
+		}
+		if (sender.hasPermission("outposts.command.toggle"))
+		{
+			message.append("  &7/outposts toggle").append('\n');
+		}
+		if (sender.hasPermission("outposts.command.reload"))
+		{
+			message.append("  &7/outposts reload").append('\n');
+		}
+
+		reply(sender, message.toString());
+	}
 
 	private void sendList(@NotNull final CommandSender sender)
 	{

@@ -16,6 +16,23 @@ softdepend:
 commands:
   outposts:
     aliases: ["posts"]
-    description: "main outposts management command"
     permission: "outposts.command"
-    usage: "/outposts info, list, reload]"
+    description: "main outposts management command"
+    usage: "/outposts [info {outpost_name}, list, toggle, reload]"
+
+permissions:
+  outposts.command.*:
+    description: "Allows access to all outposts commands"
+    children:
+      outposts.command.info: true
+      outposts.command.list: true
+      outposts.command.toggle: true
+      outposts.command.reload: true
+  outposts.command.info:
+    description: "Shows the current state of an outpost"
+  outposts.command.list:
+    description: "Shows a list of all loaded outposts"
+  outposts.command.toggle:
+    description: "Toggles the reception of outpost status announcements"
+  outposts.command.reload:
+    description: "Reloads outposts"
