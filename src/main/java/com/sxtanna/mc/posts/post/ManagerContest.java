@@ -382,10 +382,6 @@ public final class ManagerContest implements State, Listener
 			plugin.getServer().getPluginManager().callEvent(new ContestStateEvent(post, cont, cont.getCaptureState(), CaptureState.NEUTRAL));
 		} while ((post = post.getCaptureNext().orElse(null)) != null);
 
-		// TODO move this message to a timer that every so often announces that an outpost is neutral
-		plugin.getManagerMessage().send(Lang.OUTPOST_STATE_NEUTRAL,
-										"outpost_name", event.getOutpost().getName(),
-										"outpost_uuid", event.getOutpost().getUUID());
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)

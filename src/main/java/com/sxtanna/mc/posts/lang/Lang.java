@@ -17,7 +17,6 @@ public enum Lang
 	OUTPOST_ENTER("You have entered &b:outpost_name:&f!"),
 	OUTPOST_LEAVE("You have left &b:outpost_name:&f!"),
 
-	OUTPOST_STATE_NEUTRAL(":prefix:&r&f &b:outpost_name:&f is idle!"),
 	OUTPOST_STATE_CLAIMED(":prefix:&r&f &b:outpost_name:&f has been captured by &c:faction_name:&f!"),
 	OUTPOST_STATE_FORTIFY(":prefix:&r&f &c:faction_name:&f has recaptured &b:outpost_name:&f!"),
 
