@@ -150,7 +150,6 @@ public final class Contest
 		capturedUUID = null;
 
 		levels.clear();
-		inside.clear();
 		Optional.ofNullable(update.getAndSet(null)).ifPresent(BukkitTask::cancel);
 	}
 

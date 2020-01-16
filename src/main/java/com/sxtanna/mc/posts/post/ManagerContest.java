@@ -259,14 +259,29 @@ public final class ManagerContest implements State, Listener
 		switch (event.getNewState())
 		{
 			case NEUTRAL:
-				plugin.getServer().getScheduler().runTask(plugin, () ->
+				if (cont.getInside().isEmpty())
 				{
-					if (!cont.getInside().isEmpty() && allInsideAreTheSameFaction(cont))
-					{
-						plugin.getServer().getPluginManager().callEvent(new ContestStateEvent(event.getOutpost(), event.getContest(), event.getContest().getCaptureState(), CaptureState.CAPTURING));
-					}
-				});
+					break;
+				}
 
+				plugin.getServer().getScheduler().runTaskLater(plugin, () ->
+				{
+					CaptureState newState;
+
+					if (allInsideAreTheSameFaction(cont))
+					{
+						newState = CaptureState.CAPTURING;
+					}
+					else
+					{
+						newState = CaptureState.CONTESTED_CAPTURING;
+					}
+
+					if (newState != event.getContest().getCaptureState())
+					{
+						plugin.getServer().getPluginManager().callEvent(new ContestStateEvent(event.getOutpost(), event.getContest(), event.getContest().getCaptureState(), newState));
+					}
+				}, 1L);
 				break;
 			case CLAIMED:
 				final var faction = singleFactionInsideOrNull(cont);
