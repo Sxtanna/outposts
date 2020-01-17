@@ -372,17 +372,11 @@ public final class ManagerContest implements State, Listener
 
 		do
 		{
-			System.out.println("On post: " + post.getName());
-
 			var cont = getContest(post);
 			if (cont.getCaptureState() == CaptureState.NEUTRAL)
 			{
-				System.out.println("already neutral");
 				break;
 			}
-
-
-			System.out.println("updating to neutral");
 
 			cont.reset();
 			plugin.getServer().getPluginManager().callEvent(new ContestStateEvent(post, cont, cont.getCaptureState(), CaptureState.NEUTRAL));
