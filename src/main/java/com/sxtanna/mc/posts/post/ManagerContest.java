@@ -25,6 +25,9 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Manages the psuedo state machine of every contest (the state of an outpost)
+ */
 public final class ManagerContest implements State, Listener
 {
 
@@ -55,6 +58,9 @@ public final class ManagerContest implements State, Listener
 	}
 
 
+	/**
+	 * Retrieve an outpost's contest
+	 */
 	@NotNull
 	public Contest getContest(@NotNull final Outpost outpost)
 	{

@@ -18,6 +18,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Manages loading and sending messages to players
+ */
 public final class ManagerMessage implements State
 {
 
@@ -65,11 +68,17 @@ public final class ManagerMessage implements State
 	}
 
 
+	/**
+	 * Whether a player wants to receive global plugin messages
+	 */
 	public boolean wantsMessages(@NotNull final UUID uuid)
 	{
 		return !toggle.contains(uuid);
 	}
 
+	/**
+	 * Toggle whether a player wants global messages or not
+	 */
 	public void toggleMessagesTo(@NotNull final UUID uuid)
 	{
 		if (toggle.remove(uuid))
@@ -81,6 +90,9 @@ public final class ManagerMessage implements State
 	}
 
 
+	/**
+	 * Create the final text of a message with custom placeholders
+	 */
 	@NotNull
 	public String make(@NotNull final Lang lang, @NotNull final Object... placeholders)
 	{
@@ -116,6 +128,9 @@ public final class ManagerMessage implements State
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 
+	/**
+	 * Send a message to all players who want them
+	 */
 	public void send(@NotNull final Lang lang, @NotNull final Object... placeholders)
 	{
 		final var message = make(lang, placeholders);
@@ -131,6 +146,9 @@ public final class ManagerMessage implements State
 		}
 	}
 
+	/**
+	 * Send a message to a specific recipient, passing through optional placeholder plugins
+	 */
 	public void send(@NotNull final CommandSender recipient, @NotNull final Lang lang, @NotNull final Object... placeholders)
 	{
 		var message = make(lang, placeholders);

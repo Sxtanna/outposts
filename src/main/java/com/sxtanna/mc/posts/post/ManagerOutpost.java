@@ -14,6 +14,9 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+/**
+ * Manages the lifetime of an Outpost
+ */
 public final class ManagerOutpost implements State
 {
 
@@ -50,6 +53,9 @@ public final class ManagerOutpost implements State
 	}
 
 
+	/**
+	 * Retrieve all loaded outposts
+	 */
 	@NotNull
 	public Collection<Outpost> getAllOutposts()
 	{
@@ -57,12 +63,18 @@ public final class ManagerOutpost implements State
 	}
 
 
+	/**
+	 * Retrieve an outpost by its name
+	 */
 	@NotNull
 	public Optional<Outpost> getByName(@NotNull final String name)
 	{
 		return Optional.ofNullable(nameToPost.get(name.replace(' ', '_').toLowerCase()));
 	}
 
+	/**
+	 * Retrieve an outpost by the name of its zone (region)
+	 */
 	@NotNull
 	public Optional<Outpost> getByZone(@NotNull final String zone)
 	{
@@ -70,6 +82,9 @@ public final class ManagerOutpost implements State
 	}
 
 
+	/**
+	 * Retrieve an outpost by location, (uses both worth and AABB checks)
+	 */
 	@NotNull
 	public Optional<Outpost> getByLocation(@NotNull final Supplier<Location> supplier)
 	{
