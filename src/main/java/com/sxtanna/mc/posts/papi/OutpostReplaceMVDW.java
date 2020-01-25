@@ -5,6 +5,7 @@ import be.maximvdw.placeholderapi.PlaceholderReplaceEvent;
 import be.maximvdw.placeholderapi.PlaceholderReplacer;
 import com.sxtanna.mc.posts.Outposts;
 import org.bukkit.OfflinePlayer;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiFunction;
@@ -22,8 +23,9 @@ public final class OutpostReplaceMVDW implements PlaceholderReplacer, OutpostRep
 	}
 
 
+	@Contract("_ -> !null")
 	@Override
-	public String onPlaceholderReplace(final PlaceholderReplaceEvent event)
+	public String onPlaceholderReplace(@NotNull final PlaceholderReplaceEvent event)
 	{
 		return plugin.getOutpostReplace().apply(event.getOfflinePlayer(), event.getPlaceholder());
 	}
@@ -38,6 +40,8 @@ public final class OutpostReplaceMVDW implements PlaceholderReplacer, OutpostRep
 		}
 	}
 
+	@NotNull
+	@Contract(pure = true)
 	@Override
 	public BiFunction<OfflinePlayer, String, String> getFunction()
 	{

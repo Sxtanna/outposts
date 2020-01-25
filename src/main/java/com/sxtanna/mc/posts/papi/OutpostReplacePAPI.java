@@ -4,6 +4,7 @@ import com.sxtanna.mc.posts.Outposts;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiFunction;
@@ -21,18 +22,24 @@ public final class OutpostReplacePAPI extends PlaceholderExpansion implements Ou
 	}
 
 
+	@NotNull
+	@Contract(pure = true)
 	@Override
 	public String getIdentifier()
 	{
 		return "outposts";
 	}
 
+	@NotNull
+	@Contract(pure = true)
 	@Override
 	public String getAuthor()
 	{
 		return "Sxtanna";
 	}
 
+	@NotNull
+	@Contract(pure = true)
 	@Override
 	public String getVersion()
 	{
@@ -59,6 +66,8 @@ public final class OutpostReplacePAPI extends PlaceholderExpansion implements Ou
 		register();
 	}
 
+	@NotNull
+	@Contract(pure = true)
 	@Override
 	public BiFunction<OfflinePlayer, String, String> getFunction()
 	{
