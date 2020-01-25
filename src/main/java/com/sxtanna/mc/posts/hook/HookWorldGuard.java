@@ -15,10 +15,12 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -103,38 +105,52 @@ public final class HookWorldGuard implements State
 	}
 
 
-	private final class MoveFactory extends Handler.Factory<MoveHandler>
-	{
+    private final class MoveFactory extends Handler.Factory<MoveHandler>
+    {
 
-		@Override
-		public MoveHandler create(final Session session)
-		{
-			return new MoveHandler(session);
-		}
+        @NotNull
+        @Contract("_ -> new")
+        @Override
+        public MoveHandler create(final Session session)
+        {
+            return new MoveHandler(session);
+        }
 
-	}
+    }
 
-	private final class MoveHandler extends Handler
-	{
+    private final class MoveHandler extends Handler
+    {
 
-		public MoveHandler(final Session session)
-		{
-			super(session);
-		}
+        public MoveHandler(final Session session)
+        {
+            super(session);
+        }
 
 
-		@Override
-		public boolean onCrossBoundary(final Player player, final Location from, final Location to, final ApplicableRegionSet toSet, final Set<ProtectedRegion> intoRegionSet, final Set<ProtectedRegion> fromRegionSet, final MoveType moveType)
-		{
-			final var fromRegions = fromRegionSet.stream().map(ProtectedRegion::getId).collect(Collectors.toSet());
-			final var intoRegions = intoRegionSet.stream().map(ProtectedRegion::getId).collect(Collectors.toSet());
+        @Override
+        public void initialize(Player player, Location current, @NotNull ApplicableRegionSet set)
+        {
+            final var fromRegions = Collections.<String>emptySet();
+            final var intoRegions = set.getRegions().stream().map(ProtectedRegion::getId).collect(Collectors.toSet());
 
-			for (final Moved moved : cached)
-			{
-				moved.moved(player, to.getWorld(), fromRegions, intoRegions);
-			}
+            for (final var moved : cached)
+            {
+                moved.moved(player, current.getWorld(), fromRegions, intoRegions);
+            }
+        }
 
-			return true;
+        @Override
+        public boolean onCrossBoundary(@NotNull final Player player, @NotNull final Location from, @NotNull final Location to, @NotNull final ApplicableRegionSet toSet, @NotNull final Set<ProtectedRegion> intoRegionSet, @NotNull final Set<ProtectedRegion> fromRegionSet, @NotNull final MoveType moveType)
+        {
+            final var fromRegions = fromRegionSet.stream().map(ProtectedRegion::getId).collect(Collectors.toSet());
+            final var intoRegions = intoRegionSet.stream().map(ProtectedRegion::getId).collect(Collectors.toSet());
+
+            for (final Moved moved : cached)
+            {
+                moved.moved(player, to.getWorld(), fromRegions, intoRegions);
+            }
+
+            return true;
 		}
 
 	}
